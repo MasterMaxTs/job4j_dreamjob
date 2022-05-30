@@ -18,28 +18,28 @@
     <title>Работа мечты!</title>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <table class="table">
-            <caption style="caption-side: top; text-align: right" > Кандидаты </caption>
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Название вакансии</th>
-                <th scope="col">Описание</th>
-                <th scope="col">Дата создания</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="candidate: ${candidates}">
-                <td th:text="${candidate.id}" />
-                <td th:text="${candidate.name}" />
-                <td th:text="${candidate.desc}" />
-                <td th:text="${candidate.created}" />
-            </tr>
-            </tbody>
-        </table>
+    <div class="container">
+        <div class="row">
+            <table class="table">
+                <caption style="caption-side: top; text-align: right" > Кандидаты </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Название вакансии</th>
+                        <th scope="col">Описание</th>
+                        <th scope="col">Дата создания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="candidate: ${candidates}">
+                        <td th:text="${candidate.id}" />
+                        <td th:text="${candidate.name}" />
+                        <td th:text="${candidate.description}" />
+                        <td th:text="${candidate.created}" />
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </body>
 </html>

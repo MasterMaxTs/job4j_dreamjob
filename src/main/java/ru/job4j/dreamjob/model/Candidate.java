@@ -1,19 +1,19 @@
 package ru.job4j.dreamjob.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class Candidate {
 
     private int id;
     private String name;
-    private String desc;
-    private Date created;
+    private String description;
+    private Timestamp created;
 
-    public Candidate(int id, String name, String desc, Date created) {
+    public Candidate(int id, String name, String description, Timestamp created) {
         this.id = id;
         this.name = name;
-        this.desc = desc;
+        this.description = description;
         this.created = created;
     }
 
@@ -33,19 +33,19 @@ public class Candidate {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Date getCreated() {
+    public Timestamp getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
