@@ -13,7 +13,6 @@ import java.util.Date;
 public class CandidateController {
 
     private final CandidateStore store = CandidateStore.instOf();
-    private static int id = 0;
 
     @GetMapping("/candidates")
     public String candidates(Model model) {
@@ -25,7 +24,7 @@ public class CandidateController {
     public String addCandidate(Model model) {
         model.addAttribute(
                 "candidate",
-                new Candidate(++id,
+                new Candidate(0,
                         "Заполните поле",
                         "Заполните поле",
                         new Timestamp(new Date().getTime())
