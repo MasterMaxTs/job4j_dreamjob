@@ -13,7 +13,6 @@ import java.util.Date;
 public class PostController {
 
     private final PostStore store = PostStore.instOf();
-    private static int id = 0;
 
     @GetMapping("/posts")
     public String posts(Model model) {
@@ -25,7 +24,7 @@ public class PostController {
     public String addPost(Model model) {
         model.addAttribute(
                 "post",
-                new Post(++id,
+                new Post(0,
                         "Заполните поле",
                         "Заполните поле",
                         new Timestamp(new Date().getTime())
