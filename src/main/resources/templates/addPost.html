@@ -41,14 +41,26 @@
           Новая вакансия.
         </div>
         <div class="card-body">
-          <form>
+          <form th:action="@{/createPost}" method="POST">
             <div class="form-group">
               <p> <label>Имя
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="name">
               </label> </p>
               <p> <label>Описание
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="description">
               </label> </p>
+              <input type="hidden" name="id" value="0">
+              <input type="hidden" id="date" name="created" />
+                <script type="text/javascript">
+                    const date = new Date();
+                    const dateformat = date.getFullYear() + "-"
+                                        + ("0" + (date.getMonth() + 1)).slice(-2) + "-"
+                                        + ("0" + date.getDate()).slice(-2) + " "
+                                        + ("0" + date.getHours()).slice(-2) + ":"
+                                        + ("0" + date.getMinutes()).slice(-2) + ":"
+                                        + ("0" + date.getSeconds()).slice(-2);
+                    document.getElementById('date').value = dateformat;
+                </script>
             </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
           </form>
