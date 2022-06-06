@@ -2,7 +2,9 @@ package ru.job4j.dreamjob.store;
 
 import ru.job4j.dreamjob.model.Post;
 
+import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,7 +13,7 @@ public class PostStore {
 
     private static final PostStore INST = new PostStore();
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
-    private final AtomicInteger id = new AtomicInteger(4);
+    private final AtomicInteger id = new AtomicInteger();
 
     private PostStore() {
         posts.put(1,
@@ -33,7 +35,13 @@ public class PostStore {
     }
 
     public boolean add(Post post) {
-        return posts.putIfAbsent(id.incrementAndGet(), post) != null;
+        post.setId(
+                id.incrementAndGet()
+        );
+        post.setCreated(
+                new Timestamp(new Date().getTime())
+        );
+        return posts.putIfAbsent(post.getId(), post) != null;
     }
 
     public Collection<Post> findAll() {
