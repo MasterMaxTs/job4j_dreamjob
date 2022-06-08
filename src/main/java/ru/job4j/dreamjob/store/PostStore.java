@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.store;
 
+import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Post;
 
 import java.sql.Timestamp;
@@ -9,11 +10,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Repository
 public class PostStore {
 
-    private static final PostStore INST = new PostStore();
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
-    private final AtomicInteger id = new AtomicInteger();
+    private final AtomicInteger id = new AtomicInteger(3);
 
     private PostStore() {
         posts.put(1,
@@ -28,10 +29,6 @@ public class PostStore {
                 new Post(
                         3, "Senior Java Job",
                         "job description"));
-    }
-
-    public static PostStore instOf() {
-        return INST;
     }
 
     public boolean add(Post post) {
@@ -53,6 +50,9 @@ public class PostStore {
     }
 
     public void update(Post post) {
+        post.setCreated(
+                new Timestamp(new Date().getTime())
+        );
         posts.put(post.getId(), post);
     }
 }
