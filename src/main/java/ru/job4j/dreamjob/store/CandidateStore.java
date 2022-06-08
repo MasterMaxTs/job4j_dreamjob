@@ -39,10 +39,21 @@ public class CandidateStore {
     }
 
     public static CandidateStore instOf() {
-        return new CandidateStore();
+        return INST;
     }
 
     public Collection<Candidate> findAll() {
         return candidates.values();
+    }
+
+    public Candidate findById(int id) {
+        return candidates.get(id);
+    }
+
+    public void update(Candidate candidate) {
+        candidate.setCreated(
+                new Timestamp(new Date().getTime())
+        );
+        candidates.put(candidate.getId(), candidate);
     }
 }
