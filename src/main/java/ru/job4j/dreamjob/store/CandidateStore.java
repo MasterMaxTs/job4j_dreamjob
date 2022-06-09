@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.store;
 
+import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
 
 import java.sql.Timestamp;
@@ -7,12 +8,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
+@Repository
 public class CandidateStore {
 
-    private static final CandidateStore INST = new CandidateStore();
     private final Map<Integer, Candidate> candidates =
                                                     new ConcurrentHashMap<>();
+    private final AtomicInteger id = new AtomicInteger(3);
 
     private CandidateStore() {
         candidates.put(1,
@@ -38,8 +41,14 @@ public class CandidateStore {
                         ));
     }
 
-    public static CandidateStore instOf() {
-        return INST;
+    public boolean add(Candidate candidate) {
+        candidate.setId(
+                id.incrementAndGet()
+        );
+        candidate.setCreated(
+                new Timestamp(new Date().getTime())
+        );
+        return candidates.putIfAbsent(candidate.getId(), candidate) != null;
     }
 
     public Collection<Candidate> findAll() {
@@ -54,6 +63,6 @@ public class CandidateStore {
         candidate.setCreated(
                 new Timestamp(new Date().getTime())
         );
-        candidates.put(candidate.getId(), candidate);
+        candidates.replace(candidate.getId(), candidate);
     }
 }

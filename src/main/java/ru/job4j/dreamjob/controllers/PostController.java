@@ -30,7 +30,7 @@ public class PostController {
         return "redirect:/posts";
     }
     @GetMapping("/formAddPost")
-    public String addPost(Model model) {
+    public String addPost() {
         return "addPost";
     }
 
