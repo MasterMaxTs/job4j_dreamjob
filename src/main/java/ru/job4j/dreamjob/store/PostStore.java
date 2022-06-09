@@ -53,6 +53,6 @@ public class PostStore {
         post.setCreated(
                 new Timestamp(new Date().getTime())
         );
-        posts.put(post.getId(), post);
+        posts.replace(post.getId(), post);
     }
 }
