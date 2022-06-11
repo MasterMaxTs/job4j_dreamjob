@@ -23,7 +23,7 @@ public class CandidateController {
     @GetMapping("/candidates")
     public String candidates(Model model) {
         model.addAttribute("candidates", candidateService.findAll());
-        return "candidates";
+        return "candidate/candidates";
     }
 
     @PostMapping("/createCandidate")
@@ -34,14 +34,14 @@ public class CandidateController {
 
     @GetMapping("/formAddCandidate")
     public String addCandidate() {
-        return "addCandidate";
+        return "candidate/addCandidate";
     }
 
     @GetMapping("/formUpdateCandidate/{candidateId}")
     public String formUpdateCandidate(Model model,
                                       @PathVariable("candidateId") int id) {
         model.addAttribute("candidate", candidateService.findById(id));
-        return "updateCandidate";
+        return "candidate/updateCandidate";
     }
 
     @PostMapping("/updateCandidate")

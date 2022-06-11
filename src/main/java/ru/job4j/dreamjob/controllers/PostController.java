@@ -23,7 +23,7 @@ public class PostController {
     @GetMapping("/posts")
     public String posts(Model model) {
         model.addAttribute("posts", postService.findAll());
-        return "posts";
+        return "post/posts";
     }
 
     @PostMapping("/createPost")
@@ -33,13 +33,13 @@ public class PostController {
     }
     @GetMapping("/formAddPost")
     public String addPost() {
-        return "addPost";
+        return "post/addPost";
     }
 
     @GetMapping("/formUpdatePost/{postId}")
     public String formUpdatePost(Model model, @PathVariable("postId") int id) {
         model.addAttribute("post", postService.findById(id));
-        return "updatePost";
+        return "post/updatePost";
     }
 
     @PostMapping("/updatePost")
