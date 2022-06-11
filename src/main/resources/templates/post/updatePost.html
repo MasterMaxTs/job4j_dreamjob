@@ -55,6 +55,12 @@
                         <p><label>Описание
                             <input type="text" class="form-control" name="description" th:field="*{description}">
                         </label></p>
+                        <p><label for="city.id">Город
+                            <input type="text" class="form-control" disabled="disabled" name="city.name" th:field="*{city.name}">
+                            <select class="form-control" name="city.id" id="city.id">
+                                <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                            </select>
+                        </label></p>
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>

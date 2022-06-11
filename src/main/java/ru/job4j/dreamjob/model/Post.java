@@ -12,6 +12,7 @@ public class Post implements Serializable {
     private String description;
     private Timestamp created;
     private boolean visible;
+    private City city;
 
     public Post() {
 
@@ -62,6 +63,15 @@ public class Post implements Serializable {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
 
     @Override
     public boolean equals(Object o) {
