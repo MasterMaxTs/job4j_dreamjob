@@ -54,6 +54,12 @@
                                 <i class="fa fa-edit"></i>
                             </a>
                             <span th:text="${post.name}"></span>
+                            <span th:if="${post.visible}">
+                                <i class="fa fa-check-square-o"></i>
+                            </span>
+                            <span th:if="${!post.visible}">
+                                <i class="fa fa-square-o"></i>
+                            </span>
                         </td>
                         <td th:text="${post.description}"></td>
                         <td th:text="${post.created}"></td>

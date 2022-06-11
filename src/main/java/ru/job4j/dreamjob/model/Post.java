@@ -1,15 +1,17 @@
 package ru.job4j.dreamjob.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
-public class Post {
+public class Post implements Serializable {
 
     private int id;
     private String name;
     private String description;
     private Timestamp created;
+    private boolean visible;
 
     public Post() {
 
@@ -51,6 +53,14 @@ public class Post {
 
     public void setCreated(Timestamp created) {
         this.created = created;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     @Override
