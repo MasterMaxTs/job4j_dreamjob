@@ -50,10 +50,12 @@
                     <tr th:each="candidate: ${candidates}">
                         <td th:text="${candidate.id}"></td>
                         <td>
-                            <a th:href="@{|/formUpdateCandidate/${candidate.id}|}">
+                            <a th:href="@{|/formUpdateCandidate/${candidate.id}|}">&nbsp&nbsp
                                 <i class="fa fa-edit"></i>
                             </a>
                             <span th:text="${candidate.name}"></span>
+                            <img style="float: left" th:width="150" th:high="150" th:src="@{|/photoCandidate/${candidate.id}|}"
+                                 alt="photo">
                         </td>
                         <td th:text="${candidate.description}"></td>
                         <td th:text="${candidate.created}"></td>
