@@ -1,7 +1,9 @@
 package ru.job4j.dreamjob.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
+import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
 import java.sql.Connection;
@@ -16,6 +18,7 @@ import java.util.List;
 public class PostDBStore {
 
     private final BasicDataSource pool;
+    private static final Logger LOG = Logger.getLogger(PostDBStore.class);
 
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -24,6 +27,7 @@ public class PostDBStore {
     public List<Post> findAll() {
         String sql = "SELECT * FROM post";
         List<Post> posts = new ArrayList<>();
+        LOG.info("Trying to get all posts from DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement(sql);
             try (ResultSet it = ps.executeQuery()) {
@@ -32,57 +36,65 @@ public class PostDBStore {
                             new Post(
                                     it.getInt("id"),
                                     it.getString("name"),
-                                    it.getString("description")
+                                    it.getString("description"),
+                                    it.getTimestamp("created"),
+                                    new City(it.getInt("city_id"), "")
                             )
                     );
                 }
             }
+            LOG.info("Success!");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Not successful: " + e.getMessage());
         }
         return posts;
     }
 
     public Post add(Post post) {
-        String sql = "INSERT INTO post (name, city_id, description, created)"
+        String sql = "INSERT INTO post (name, description, created, city_id)"
                         + "VALUES (?, ?, ?, ?)";
+        LOG.info("Trying to add a post to DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps =
                     cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getName());
-            ps.setInt(2, post.getCity().getId());
-            ps.setString(3, post.getDescription());
-            ps.setTimestamp(4, new Timestamp(post.getCreated().getTime()));
+            ps.setString(2, post.getDescription());
+            ps.setTimestamp(3, new Timestamp(post.getCreated().getTime()));
+            ps.setInt(4, post.getCity().getId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
                     post.setId(id.getInt("id"));
                 }
             }
+            LOG.info("Success!");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Not successful: " + e.getMessage());
         }
         return post;
     }
 
     public void update(Post post) {
-        String sql = "UPDATE post SET name = ? , city_id = ? , description = ? , "
-                + "created = ? WHERE id = ?";
+        String sql = "UPDATE post SET name = ? , description = ? , "
+                + "created = ? , city_id = ? WHERE id = ?";
+        LOG.info("Trying to update post in the DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement(sql);
             ps.setString(1, post.getName());
-            ps.setInt(2, post.getCity().getId());
-            ps.setString(3, post.getDescription());
-            ps.setTimestamp(4, new Timestamp(new Date().getTime()));
+            ps.setString(2, post.getDescription());
+            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setInt(4, post.getCity().getId());
             ps.setInt(5, post.getId());
             ps.executeUpdate();
+            LOG.info("Success!");
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Not successful: " + e.getMessage());
         }
     }
 
     public Post findById(int id) {
         String sql = "SELECT * FROM post WHERE id = ?";
+        LOG.info("Trying to find a post by id");
         try (Connection cn = pool.getConnection()) {
            PreparedStatement ps = cn.prepareStatement(sql);
            ps.setInt(1, id);
@@ -91,12 +103,14 @@ public class PostDBStore {
                    return new Post(
                            it.getInt("id"),
                            it.getString("name"),
-                           it.getString("description")
+                           it.getString("description"),
+                           it.getTimestamp("created"),
+                           new City(it.getInt("city_id"), "")
                    );
                }
            }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Not successful: " + e.getMessage());
         }
         return null;
     }
