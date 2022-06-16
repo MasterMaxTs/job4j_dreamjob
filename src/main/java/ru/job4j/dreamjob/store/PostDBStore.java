@@ -45,7 +45,7 @@ public class PostDBStore {
             }
             LOG.info("Success!");
         } catch (Exception e) {
-            LOG.error("Not successful: " + e.getMessage());
+            LOG.error("Not successful: " + e.getMessage(), e);
         }
         return posts;
     }
@@ -69,7 +69,7 @@ public class PostDBStore {
             }
             LOG.info("Success!");
         } catch (Exception e) {
-            LOG.error("Not successful: " + e.getMessage());
+            LOG.error("Not successful: " + e.getMessage(), e);
         }
         return post;
     }
@@ -88,7 +88,7 @@ public class PostDBStore {
             ps.executeUpdate();
             LOG.info("Success!");
         } catch (Exception e) {
-            LOG.error("Not successful: " + e.getMessage());
+            LOG.error("Not successful: " + e.getMessage(), e);
         }
     }
 
@@ -110,7 +110,7 @@ public class PostDBStore {
                }
            }
         } catch (Exception e) {
-            LOG.error("Not successful: " + e.getMessage());
+            LOG.error("Not successful: " + e.getMessage(), e);
         }
         return null;
     }
