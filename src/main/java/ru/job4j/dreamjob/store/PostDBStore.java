@@ -25,7 +25,7 @@ public class PostDBStore {
     }
 
     public List<Post> findAll() {
-        String sql = "SELECT * FROM post";
+        String sql = "SELECT * FROM post ORDER BY 1";
         List<Post> posts = new ArrayList<>();
         LOG.info("Trying to get all posts from DB");
         try (Connection cn = pool.getConnection()) {
@@ -38,7 +38,8 @@ public class PostDBStore {
                                     it.getString("name"),
                                     it.getString("description"),
                                     it.getTimestamp("created"),
-                                    new City(it.getInt("city_id"), "")
+                                    new City(it.getInt("city_id"), ""),
+                                    it.getBoolean("visible")
                             )
                     );
                 }
@@ -51,16 +52,17 @@ public class PostDBStore {
     }
 
     public Post add(Post post) {
-        String sql = "INSERT INTO post (name, description, created, city_id)"
-                        + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO post (name, description, created, "
+                + "city_id, visible) VALUES (?, ?, ?, ?, ?)";
         LOG.info("Trying to add a post to DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps =
                     cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setTimestamp(3, new Timestamp(post.getCreated().getTime()));
+            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
             ps.setInt(4, post.getCity().getId());
+            ps.setBoolean(5, post.isVisible());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -105,7 +107,8 @@ public class PostDBStore {
                            it.getString("name"),
                            it.getString("description"),
                            it.getTimestamp("created"),
-                           new City(it.getInt("city_id"), "")
+                           new City(it.getInt("city_id"), ""),
+                           it.getBoolean("visible")
                    );
                }
            }

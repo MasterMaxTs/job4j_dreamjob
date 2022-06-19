@@ -25,28 +25,29 @@ public class CandidateStore {
                                 1,
                                 "Junior Java Developer",
                                 "here is description",
-                                new Timestamp(new Date().getTime())
+                                new Timestamp(new Date().getTime()),
+                                new byte[]{}
                         ));
         candidates.put(2,
                         new Candidate(
                                 2,
                                 "Middle Java Developer",
                                 "here is description",
-                                new Timestamp(new Date().getTime())
+                                new Timestamp(new Date().getTime()),
+                                new byte[]{}
                         ));
         candidates.put(3,
                         new Candidate(
                                 3,
                                 "Senior Java Developer",
                                 "here is description",
-                                new Timestamp(new Date().getTime())
+                                new Timestamp(new Date().getTime()),
+                                new byte[]{}
                         ));
     }
 
     public boolean add(Candidate candidate) {
-        candidate.setId(
-                id.incrementAndGet()
-        );
+        candidate.setId(id.incrementAndGet());
         candidate.setCreated(
                 new Timestamp(new Date().getTime())
         );

@@ -22,13 +22,10 @@ public class PostService {
     public List<Post> findAll() {
         List<Post> posts = store.findAll();
         posts.forEach(
-                post -> {
-                    post.setCity(
-                            cityService.findById(
-                                    post.getCity().getId()
-                            )
-                    );
-                }
+                post -> post.setCity(
+                        cityService.findById(
+                                post.getCity().getId()
+                        ))
         );
         return posts;
     }

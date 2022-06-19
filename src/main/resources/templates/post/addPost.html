@@ -57,10 +57,11 @@
                         </label></p>
                     </div>
                     <div class="form-group">
-                        <p><label for="city.id">Город</label>
-                        <select class="form-control" name="city.id" id="city.id">
+                        <p><label>Город
+                        <select class="form-control" name="city.id">
                             <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
-                        </select></p>
+                        </select>
+                        </label></p>
                     </div>
                     <div class="form-check">
                         <p><input type="checkbox" class="form-check-input" name="visible" id="visible">

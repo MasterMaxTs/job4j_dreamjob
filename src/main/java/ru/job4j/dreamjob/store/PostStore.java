@@ -25,21 +25,27 @@ public class PostStore {
                         "Junior Java Job",
                         "job description",
                         new Timestamp(new Date().getTime()),
-                        new City(1, ""))
+                        new City(1, ""),
+                true)
         );
         posts.put(2,
                 new Post(2,
                         "Middle Java Job",
                         "job description",
                         new Timestamp(new Date().getTime()),
-                        new City(1, ""))
+                        new City(1, ""),
+                        true
+                )
+
         );
         posts.put(3,
                 new Post(3,
                         "Senior Java Job",
                         "job description",
                         new Timestamp(new Date().getTime()),
-                        new City(1, ""))
+                        new City(1, ""),
+                        true
+                )
         );
     }
 

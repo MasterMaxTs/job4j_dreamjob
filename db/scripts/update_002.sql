@@ -1,9 +1,7 @@
-CREATE TABLE post
+CREATE TABLE candidate
 (
     id          SERIAL PRIMARY KEY,
-    name        TEXT,
+    name        VARCHAR(80),
     description TEXT,
     created     TIMESTAMP,
-    city_id     INTEGER,
-    visible     BOOLEAN
 );
