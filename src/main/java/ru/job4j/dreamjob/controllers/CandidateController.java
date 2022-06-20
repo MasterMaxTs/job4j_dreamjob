@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.services.CandidateService;
-import ru.job4j.dreamjob.services.photoservice.PhotoService;
 
 import java.io.IOException;
 
@@ -21,16 +20,13 @@ import java.io.IOException;
 public class CandidateController {
 
     private final CandidateService candidateService;
-    private final PhotoService photoService;
 
-    public CandidateController(CandidateService candidateService, PhotoService photoService) {
+    public CandidateController(CandidateService candidateService) {
         this.candidateService = candidateService;
-        this.photoService = photoService;
     }
 
     @GetMapping("/candidates")
     public String candidates(Model model) {
-        photoService.loadPhotos();
         model.addAttribute("candidates", candidateService.findAll());
         return "candidate/candidates";
     }
@@ -40,14 +36,12 @@ public class CandidateController {
                                @RequestParam("file") MultipartFile file) throws IOException {
         candidate.setPhoto(file.getBytes());
         candidateService.add(candidate);
-        photoService.addPhoto(candidate.getId(), candidate.getPhoto());
         return "redirect:/candidates";
     }
 
     @GetMapping("/photoCandidate/{candidateId}")
     public ResponseEntity<Resource> download(@PathVariable("candidateId") Integer candidateId) {
         Candidate candidate = candidateService.findById(candidateId);
-        candidate.setPhoto(photoService.findById(candidateId));
         return ResponseEntity.ok()
                 .headers(new HttpHeaders())
                 .contentLength(candidate.getPhoto().length)
@@ -72,7 +66,6 @@ public class CandidateController {
                                   @RequestParam("file") MultipartFile file) throws IOException {
         candidate.setPhoto(file.getBytes());
         candidateService.update(candidate);
-        photoService.updatePhoto(candidate.getId(), candidate.getPhoto());
         return "redirect:candidates";
     }
 }

@@ -34,7 +34,7 @@ public class CandidateDBStore {
                                         it.getString("name"),
                                         it.getString("description"),
                                         it.getTimestamp("created"),
-                                        new byte[]{}
+                                        it.getBytes("photo")
                             )
                     );
                 }
@@ -47,8 +47,8 @@ public class CandidateDBStore {
     }
 
     public Candidate add(Candidate candidate) {
-        String sql = "INSERT INTO candidate (name, description, created)"
-                + "VALUES (? , ? , ?)";
+        String sql = "INSERT INTO candidate (name, description, created, photo)"
+                + "VALUES (? , ? , ? , ?)";
         LOG.info("Trying to add a candidate to DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps =
@@ -56,6 +56,7 @@ public class CandidateDBStore {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 while (id.next()) {
@@ -71,14 +72,15 @@ public class CandidateDBStore {
 
     public void update(Candidate candidate) {
         String sql = "UPDATE candidate SET name = ? , description = ? , "
-                + "created = ? WHERE id = ?";
+                + "created = ? , photo = ? WHERE id = ?";
         LOG.info("Trying to update candidate in the DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement(sql);
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setTimestamp(3, new Timestamp(new Date().getTime()));
-            ps.setInt(4, candidate.getId());
+            ps.setBytes(4, candidate.getPhoto());
+            ps.setInt(5, candidate.getId());
             ps.executeUpdate();
             LOG.info("Success!");
         } catch (SQLException e) {
@@ -99,7 +101,7 @@ public class CandidateDBStore {
                             it.getString("name"),
                             it.getString("description"),
                             it.getTimestamp("created"),
-                            new byte[]{}
+                            it.getBytes("photo")
                     );
                 }
             }
