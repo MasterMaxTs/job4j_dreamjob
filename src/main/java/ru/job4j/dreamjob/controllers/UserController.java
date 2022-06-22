@@ -27,29 +27,51 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public String registration(RedirectAttributes redirectAttributes,
-                               @ModelAttribute User user) {
+    public String registration(@ModelAttribute User user,
+                               RedirectAttributes redirectAttributes) {
         Optional<User> regUser = userService.add(user);
         if (regUser.isEmpty()) {
-            redirectAttributes.addAttribute("attr",
-                    "Пользователь с почтой " + user.getEmail() + " уже существует!");
+           String message = "Пользователь с почтой " + user.getEmail() + " "
+                            + "уже существует!";
+           redirectAttributes.addAttribute("msg", message);
             return "redirect:/fail";
         }
-        redirectAttributes.addAttribute("attr", user.getName());
+        redirectAttributes.addAttribute("user", user.getName());
         return "redirect:/success";
     }
 
     @GetMapping("/success")
-    public String informToSuccess(@RequestParam("attr") String userName,
+    public String informToSuccess(@RequestParam("user") String userName,
                                   Model model) {
         model.addAttribute("name", userName);
         return "user/registration_success";
     }
 
     @GetMapping("/fail")
-    public String informToFail(@RequestParam("attr") String msg,
+    public String informToFail(@RequestParam("msg") String msg,
                                Model model) {
-        model.addAttribute("msg", msg);
+        model.addAttribute("message", msg);
         return "user/registration_fail";
+    }
+
+    @GetMapping("/loginPage")
+    public String loginPage(Model model,
+                            @RequestParam(value = "fail", required = false) Boolean fail) {
+        model.addAttribute("fail", fail != null);
+        return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute User user,
+                        RedirectAttributes redirectAttributes) {
+        Optional<User> userDb =
+                        userService.findUserByEmailAndPwd(
+                                user.getEmail(), user.getPassword()
+                );
+        if (userDb.isEmpty()) {
+            redirectAttributes.addAttribute("fail", true);
+            return "redirect:/loginPage";
+        }
+        return "redirect:/index";
     }
 }

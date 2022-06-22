@@ -115,4 +115,30 @@ public class UserDBStore {
         }
         return rsl;
     }
+
+    public Optional<User> findUserByEmailAndPwd(String email, String password) {
+        Optional<User> rsl = Optional.empty();
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        LOG.info("Trying to find a user by email and password");
+        try (Connection cn = pool.getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, password);
+            try (ResultSet it = ps.executeQuery()) {
+                if (it.next()) {
+                    rsl = Optional.of(
+                            new User(it.getInt("id"),
+                                    it.getString("name"),
+                                    it.getString("email"),
+                                    it.getString("password")
+                            )
+                    );
+                }
+            }
+            LOG.info("Success!");
+        } catch (SQLException e) {
+            LOG.error("Not successful: " + e.getMessage(), e);
+        }
+        return rsl;
+    }
 }
