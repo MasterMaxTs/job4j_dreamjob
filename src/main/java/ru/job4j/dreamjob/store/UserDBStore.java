@@ -49,6 +49,7 @@ public class UserDBStore {
     }
 
     public Optional<User> add(User user) {
+        Optional<User> rsl = Optional.empty();
         String sql = "INSERT INTO users (name, email, password)"
                 + "VALUES (? , ? , ?)";
         LOG.info("Trying to add a user to DB");
@@ -65,11 +66,11 @@ public class UserDBStore {
                 }
             }
             LOG.info("Success!");
+            rsl = Optional.of(user);
         } catch (SQLException e) {
             LOG.error("Not successful: " + e.getMessage(), e);
-            return Optional.empty();
         }
-        return Optional.of(user);
+        return rsl;
     }
 
     public void update(User user) {
@@ -89,7 +90,8 @@ public class UserDBStore {
         }
     }
 
-    public User findById(int id) {
+    public Optional<User> findById(int id) {
+        Optional<User> rsl = Optional.empty();
         String sql = "SELECT * FROM users WHERE id = ?";
         LOG.info("Trying to find a user by id");
         try (Connection cn = pool.getConnection()) {
@@ -97,18 +99,20 @@ public class UserDBStore {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new User(
-                                    it.getInt("id"),
-                                    it.getString("name"),
-                                    it.getString("email"),
-                                    ""
-                            );
+                    rsl = Optional.of(
+                                    new User(
+                                            it.getInt("id"),
+                                            it.getString("name"),
+                                            it.getString("email"),
+                                            ""
+                                    )
+                    );
                 }
             }
             LOG.info("Success!");
         } catch (SQLException e) {
             LOG.error("Not successful: " + e.getMessage(), e);
         }
-        return null;
+        return rsl;
     }
 }
