@@ -8,9 +8,11 @@ import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.services.CityService;
 import ru.job4j.dreamjob.services.PostService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 @ThreadSafe
-public class PostController {
+public class PostController implements ManageSession {
 
     private final PostService postService;
     private final CityService cityService;
@@ -21,8 +23,9 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public String posts(Model model) {
+    public String posts(Model model, HttpSession session) {
         model.addAttribute("posts", postService.findAll());
+        addUserInModelFromSession(model, session);
         return "post/posts";
     }
 
@@ -34,18 +37,21 @@ public class PostController {
         return "redirect:/posts";
     }
     @GetMapping("/formAddPost")
-    public String addPost(Model model) {
+    public String addPost(Model model, HttpSession session) {
         model.addAttribute("cities", cityService.getAllCities());
+        addUserInModelFromSession(model, session);
         return "post/addPost";
     }
 
     @GetMapping("/formUpdatePost/{postId}")
     public String formUpdatePost(Model model,
-                                 @PathVariable("postId") int id) {
+                                 @PathVariable("postId") int id,
+                                 HttpSession session) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
         model.addAttribute("city", cityService.findById(post.getCity().getId()));
         model.addAttribute("cities", cityService.getAllCities());
+        addUserInModelFromSession(model, session);
         return "post/updatePost";
     }
 

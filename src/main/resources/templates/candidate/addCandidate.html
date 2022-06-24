@@ -31,6 +31,17 @@
                     <a class="nav-item nav-link" th:href="@{/formAddPost}">Добавить вакансию</a>
                     <a class="nav-item nav-link" th:href="@{/candidates}">Кандидаты</a>
                     <a class="nav-item nav-link" th:href="@{/formAddCandidate}">Добавить кандидата</a>
+                    <a class="nav-item nav-link" th:href="@{/addUser}">Зарегистрироватьcя</a>
+                    <a class="nav-item nav-link" th:if="${user.name == 'Гость'}">
+                        <form th:action="@{/loginPage}" method="GET">
+                            <button type="submit" class="btn btn-info"><span th:text="${user.name}"></span> | Войти</button>
+                        </form>
+                    </a>
+                    <a class="nav-item nav-link" th:if="${user.name != 'Гость'}">
+                        <form th:action="@{/logout}" method="GET">
+                            <button type="submit" class="btn btn-success"><span th:text="${user.name}"></span> | Выйти</button>
+                        </form>
+                    </a>
                 </div>
             </div>
         </nav>

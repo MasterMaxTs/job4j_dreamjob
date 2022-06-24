@@ -13,11 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.services.CandidateService;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Controller
 @ThreadSafe
-public class CandidateController {
+public class CandidateController implements ManageSession {
 
     private final CandidateService candidateService;
 
@@ -26,8 +27,9 @@ public class CandidateController {
     }
 
     @GetMapping("/candidates")
-    public String candidates(Model model) {
+    public String candidates(Model model, HttpSession session) {
         model.addAttribute("candidates", candidateService.findAll());
+        addUserInModelFromSession(model, session);
         return "candidate/candidates";
     }
 
@@ -50,14 +52,17 @@ public class CandidateController {
     }
 
     @GetMapping("/formAddCandidate")
-    public String addCandidate() {
+    public String addCandidate(Model model, HttpSession session) {
+        addUserInModelFromSession(model, session);
         return "candidate/addCandidate";
     }
 
     @GetMapping("/formUpdateCandidate/{candidateId}")
     public String formUpdateCandidate(Model model,
-                                      @PathVariable("candidateId") int id) {
+                                      @PathVariable("candidateId") int id,
+                                      HttpSession session) {
         model.addAttribute("candidate", candidateService.findById(id));
+        addUserInModelFromSession(model, session);
         return "candidate/updateCandidate";
     }
 

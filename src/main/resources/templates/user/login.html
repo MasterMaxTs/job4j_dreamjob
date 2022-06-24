@@ -18,29 +18,58 @@
     <title>Работа мечты!</title>
 </head>
 <body>
-<div class="container pt-3">
-    <div class="row">
-        <div class="card" style="width: 100%">
-            <div class="card-header">
-                Авторизация
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Работа мечты</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/index}">Главная <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/posts}">Вакансии</a>
+                <a class="nav-item nav-link" th:href="@{/formAddPost}">Добавить вакансию</a>
+                <a class="nav-item nav-link" th:href="@{/candidates}">Кандидаты</a>
+                <a class="nav-item nav-link" th:href="@{/formAddCandidate}">Добавить кандидата</a>
+                <a class="nav-item nav-link" th:href="@{/addUser}">Зарегистрироватьcя</a>
+                <a class="nav-item nav-link" th:if="${user.name == 'Гость'}">
+                    <form th:action="@{/loginPage}" method="GET">
+                        <button type="submit" class="btn btn-info"><span th:text="${user.name}"></span> | Войти</button>
+                    </form>
+                </a>
+                <a class="nav-item nav-link" th:if="${user.name != 'Гость'}">
+                    <form th:action="@{/logout}" method="GET">
+                        <button type="submit" class="btn btn-success"><span th:text="${user.name}"></span> | Выйти</button>
+                    </form>
+                </a>
             </div>
-            <div class="card-body">
-                <div th:if="${fail}" class="alert alert-danger" role="alert">
-                    Логин или пароль введены не верно!
+        </div>
+    </nav>
+    <p/>
+    <div class="container pt-3">
+        <div class="row">
+            <div class="card" style="width: 100%">
+                <div class="card-header">
+                    Авторизация
                 </div>
-                <form th:action="@{/login}" method="POST">
-                    <div class="form-group">
-                        <label>Почта
-                        <input type="text" class="form-control" name="email">
-                        </label>
+                <div class="card-body">
+                    <div th:if="${fail}" class="alert alert-danger" role="alert">
+                        Логин или пароль введены не верно!
                     </div>
-                    <div class="form-group">
-                        <label>Пароль
-                        <input type="text" class="form-control" name="password">
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Войти</button>
-                </form>
+                    <form th:action="@{/login}" method="POST">
+                        <div class="form-group">
+                            <label>Почта
+                            <input type="text" class="form-control" name="email">
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Пароль
+                            <input type="text" class="form-control" name="password">
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Войти</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

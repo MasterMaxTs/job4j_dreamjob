@@ -10,10 +10,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.services.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
-public class UserController {
+public class UserController implements ManageSession {
 
     private final UserService userService;
 
@@ -22,7 +24,8 @@ public class UserController {
     }
 
     @GetMapping("/addUser")
-    public String add() {
+    public String add(Model model, HttpSession session) {
+        addUserInModelFromSession(model, session);
         return "user/addUser";
     }
 
@@ -42,28 +45,35 @@ public class UserController {
 
     @GetMapping("/success")
     public String informToSuccess(@RequestParam("user") String userName,
-                                  Model model) {
+                                  Model model,
+                                  HttpSession session) {
         model.addAttribute("name", userName);
+        addUserInModelFromSession(model, session);
         return "user/registration_success";
     }
 
     @GetMapping("/fail")
     public String informToFail(@RequestParam("msg") String msg,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
         model.addAttribute("message", msg);
+        addUserInModelFromSession(model, session);
         return "user/registration_fail";
     }
 
     @GetMapping("/loginPage")
     public String loginPage(Model model,
-                            @RequestParam(value = "fail", required = false) Boolean fail) {
+                            @RequestParam(value = "fail", required = false) Boolean fail,
+                            HttpSession session) {
         model.addAttribute("fail", fail != null);
+        addUserInModelFromSession(model, session);
         return "user/login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute User user,
-                        RedirectAttributes redirectAttributes) {
+                        RedirectAttributes redirectAttributes,
+                        HttpServletRequest req) {
         Optional<User> userDb =
                         userService.findUserByEmailAndPwd(
                                 user.getEmail(), user.getPassword()
@@ -72,6 +82,14 @@ public class UserController {
             redirectAttributes.addAttribute("fail", true);
             return "redirect:/loginPage";
         }
+        HttpSession session = req.getSession();
+        session.setAttribute("user", userDb.get());
         return "redirect:/index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/loginPage";
     }
 }
