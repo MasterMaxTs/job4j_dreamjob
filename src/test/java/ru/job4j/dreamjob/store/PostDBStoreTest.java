@@ -20,11 +20,14 @@ import static org.junit.Assert.*;
 
 public class PostDBStoreTest {
 
-    private List<Post> posts;
+    private BasicDataSource pool;
     private PostDBStore store;
+    private List<Post> posts;
 
     @Before
     public void whenSetUp() {
+        pool = new Main().loadPool();
+        store = new PostDBStore(pool);
         Timestamp now = new Timestamp(new Date().getTime());
         City firstCity = new City(1, "Краснодар");
         City secondCity = new City(2, "Москва");
@@ -35,12 +38,10 @@ public class PostDBStoreTest {
                 2, "Java Middle Job", "Description", now, secondCity, true
         );
         posts = List.of(firstPost, secondPost);
-        store = new PostDBStore(new Main().loadPool());
     }
 
     @After
     public void wipeTable() throws SQLException {
-        BasicDataSource pool = new Main().loadPool();
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement("DELETE FROM post");
             ps.execute();
@@ -67,7 +68,7 @@ public class PostDBStoreTest {
     public void whenUpdatePost() {
         Post firstPost = posts.get(0);
         store.add(firstPost);
-        firstPost.setName("Seniour Java Job");
+        firstPost.setName("Senior Java Job");
         firstPost.setDescription("New description");
         store.update(firstPost);
         Post postInDb = store.findById(firstPost.getId());

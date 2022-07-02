@@ -19,11 +19,14 @@ import static org.junit.Assert.*;
 
 public class CandidateDBStoreTest {
 
-    private List<Candidate> candidates;
+    private BasicDataSource pool;
     private CandidateDBStore store;
+    private List<Candidate> candidates;
 
     @Before
     public void whenSetUp() {
+        pool = new Main().loadPool();
+        store = new CandidateDBStore(pool);
         Timestamp now = new Timestamp(new Date().getTime());
         Candidate firstCandidate = new Candidate(
                 1, "Maxim", "Middle Java Developer", now, new byte[]{}
@@ -32,12 +35,10 @@ public class CandidateDBStoreTest {
                 2, "Viktoriya", "Senior Java Developer", now, new byte[]{}
         );
         candidates = List.of(firstCandidate, secondCandidate);
-        store = new CandidateDBStore(new Main().loadPool());
     }
 
     @After
     public void wipeTable() throws SQLException {
-        BasicDataSource pool = new Main().loadPool();
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate");
             ps.execute();
