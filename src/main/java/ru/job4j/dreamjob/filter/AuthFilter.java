@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
                 || uri.endsWith("login")
                 || uri.endsWith("addUser")
                 || uri.endsWith("registration")
-                ||  uri.endsWith("success")
+                || uri.endsWith("success")
                 || uri.endsWith("fail")
         ) {
             chain.doFilter(req, res);
