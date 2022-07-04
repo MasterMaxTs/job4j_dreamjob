@@ -52,7 +52,7 @@ public class CandidateController implements ManageSession {
     }
 
     @GetMapping("/formAddCandidate")
-    public String addCandidate(Model model, HttpSession session) {
+    public String createCandidate(Model model, HttpSession session) {
         addUserInModelFromSession(model, session);
         return "candidate/addCandidate";
     }

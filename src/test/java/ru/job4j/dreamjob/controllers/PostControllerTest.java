@@ -97,7 +97,6 @@ public class PostControllerTest {
     @Test
     public void whenUpdatePost() {
         Post input = posts.get(0);
-        assertThat(input.getCity(), is(cities.get(0)));
         City newCity = cities.get(1);
         int newCityId = newCity.getId();
         when(cityService.findById(newCityId)).thenReturn(newCity);
