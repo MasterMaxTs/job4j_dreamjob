@@ -6,15 +6,13 @@ import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
-public class PostStore {
+public class PostStore implements Store<Post> {
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger(3);
@@ -49,24 +47,28 @@ public class PostStore {
         );
     }
 
-    public boolean add(Post post) {
+    @Override
+    public Post add(Post post) {
         post.setId(
                 id.incrementAndGet()
         );
         post.setCreated(
                 new Timestamp(new Date().getTime())
         );
-        return posts.putIfAbsent(post.getId(), post) != null;
+        return posts.putIfAbsent(post.getId(), post);
     }
 
-    public Collection<Post> findAll() {
-        return posts.values();
+    @Override
+    public List<Post> findAll() {
+        return new ArrayList<>(posts.values());
     }
 
+    @Override
     public Post findById(int id) {
         return posts.get(id);
     }
 
+    @Override
     public void update(Post post) {
         post.setCreated(
                 new Timestamp(new Date().getTime())

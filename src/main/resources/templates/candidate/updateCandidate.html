@@ -60,19 +60,20 @@
                 <form th:action="@{/updateCandidate}" method="POST" th:object="${candidate}" enctype="multipart/form-data">
                     <input type="hidden" name="id" th:field="*{id}"/>
                     <div class="form-group">
-                        <p><label>Имя
-                            <input type="text" class="form-control" name="name" th:field="*{name}">
-                        </label></p>
+                        <label>Имя
+                            <input type="text" class="form-control" name="name" th:field="*{name}"><br>
+                        </label>
                         <div class="form-group">
-                            <p> <label>Фотография
-                                <input type="file" class="form-control" name="file">
-                            </label></p>
+                            <label>Фотография
+                                <input type="file" class="form-control" name="file"><br>
+                            </label>
                         </div>
-                        <p><label>Описание
-                            <input type="text" class="form-control" name="description" th:field="*{description}">
-                        </label></p>
+                        <label>Описание<br>
+                            <textarea name="description" th:field="*{description}"
+                                      style="height: 200px; width: 350px"></textarea><br>
+                        </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-warning">Редактировать</button>
                 </form>
             </div>
         </div>

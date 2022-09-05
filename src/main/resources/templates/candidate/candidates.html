@@ -61,7 +61,7 @@
                     <tr th:each="candidate: ${candidates}">
                         <td th:text="${candidate.id}"></td>
                         <td>
-                            <a th:href="@{|/formUpdateCandidate/${candidate.id}|}">&nbsp&nbsp
+                            <a th:href="@{|/formUpdateCandidate/${candidate.id}|}" title="Редактировать">&nbsp&nbsp
                                 <i class="fa fa-edit"></i>
                             </a>
                             <span th:text="${candidate.name}"></span>

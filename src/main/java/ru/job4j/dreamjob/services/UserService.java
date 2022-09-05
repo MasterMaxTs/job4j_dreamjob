@@ -22,7 +22,7 @@ public class UserService {
         return store.findAll();
     }
 
-    public Optional<User> add(User user) {
+    public User add(User user) {
         return store.add(user);
     }
 
@@ -30,7 +30,7 @@ public class UserService {
         store.update(user);
     }
 
-    public Optional<User> findById(int id) {
+    public User findById(int id) {
         return store.findById(id);
     }
 

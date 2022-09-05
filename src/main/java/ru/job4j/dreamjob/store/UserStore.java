@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
-public class UserStore {
+public class UserStore implements Store<User> {
 
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger();
@@ -21,19 +21,23 @@ public class UserStore {
 
     }
 
-    public boolean add(User user) {
+    @Override
+    public User add(User user) {
         user.setId(id.incrementAndGet());
-        return users.putIfAbsent(user.getId(), user) != null;
+        return users.putIfAbsent(user.getId(), user);
     }
 
+    @Override
     public List<User> findAll() {
         return new ArrayList<>(users.values());
     }
 
+    @Override
     public User findById(int id) {
         return users.get(id);
     }
 
+    @Override
     public void update(User user) {
         users.replace(user.getId(), user);
     }

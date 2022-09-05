@@ -6,12 +6,13 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Repository
-public class CandidateDBStore {
+public class CandidateDBStore implements Store<Candidate> {
 
     private final BasicDataSource pool;
     private static final Logger LOG = Logger.getLogger(CandidateDBStore.class);
@@ -20,6 +21,7 @@ public class CandidateDBStore {
         this.pool = pool;
     }
 
+    @Override
     public List<Candidate> findAll() {
         String sql = "SELECT * FROM candidate ORDER BY 1";
         List<Candidate> candidates = new ArrayList<>();
@@ -46,6 +48,7 @@ public class CandidateDBStore {
         return candidates;
     }
 
+    @Override
     public Candidate add(Candidate candidate) {
         String sql = "INSERT INTO candidate (name, description, created, photo)"
                 + "VALUES (? , ? , ? , ?)";
@@ -55,7 +58,9 @@ public class CandidateDBStore {
                     cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
-            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setTimestamp(3,
+                    Timestamp.valueOf(LocalDateTime.now().withNano(0))
+            );
             ps.setBytes(4, candidate.getPhoto());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -70,6 +75,7 @@ public class CandidateDBStore {
         return candidate;
     }
 
+    @Override
     public void update(Candidate candidate) {
         String sql = "UPDATE candidate SET name = ? , description = ? , "
                 + "created = ? , photo = ? WHERE id = ?";
@@ -78,7 +84,9 @@ public class CandidateDBStore {
             PreparedStatement ps = cn.prepareStatement(sql);
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
-            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setTimestamp(3,
+                    Timestamp.valueOf(LocalDateTime.now().withNano(0))
+            );
             ps.setBytes(4, candidate.getPhoto());
             ps.setInt(5, candidate.getId());
             ps.executeUpdate();
@@ -88,6 +96,7 @@ public class CandidateDBStore {
         }
     }
 
+    @Override
     public Candidate findById(int id) {
         String sql = "SELECT * FROM candidate WHERE id = ?";
         LOG.info("Trying to find a candidate by id");

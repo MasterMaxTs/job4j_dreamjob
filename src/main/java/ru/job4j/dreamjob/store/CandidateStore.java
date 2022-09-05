@@ -5,15 +5,13 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
 
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
-public class CandidateStore {
+public class CandidateStore implements Store<Candidate> {
 
     private final Map<Integer, Candidate> candidates =
                                                     new ConcurrentHashMap<>();
@@ -46,22 +44,26 @@ public class CandidateStore {
                         ));
     }
 
-    public boolean add(Candidate candidate) {
+    @Override
+    public Candidate add(Candidate candidate) {
         candidate.setId(id.incrementAndGet());
         candidate.setCreated(
                 new Timestamp(new Date().getTime())
         );
-        return candidates.putIfAbsent(candidate.getId(), candidate) != null;
+        return candidates.putIfAbsent(candidate.getId(), candidate);
     }
 
-    public Collection<Candidate> findAll() {
-        return candidates.values();
+    @Override
+    public List<Candidate> findAll() {
+        return new ArrayList<>(candidates.values());
     }
 
+    @Override
     public Candidate findById(int id) {
         return candidates.get(id);
     }
 
+    @Override
     public void update(Candidate candidate) {
         candidate.setCreated(
                 new Timestamp(new Date().getTime())

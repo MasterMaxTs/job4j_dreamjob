@@ -62,7 +62,7 @@
                     <tr th:each="post: ${posts}">
                         <td th:text="${post.id}"></td>
                         <td>
-                            <a th:href="@{|/formUpdatePost/${post.id}|}">
+                            <a th:href="@{|/formUpdatePost/${post.id}|}" title="Редактировать">
                                 <i class="fa fa-edit"></i>
                             </a>
                             <span th:text="${post.name}"></span>

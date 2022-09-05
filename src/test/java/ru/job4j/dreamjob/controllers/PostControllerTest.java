@@ -8,7 +8,6 @@ import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.services.CityService;
 import ru.job4j.dreamjob.services.PostService;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,6 @@ public class PostControllerTest {
     private CityService cityService;
     private PostController postController;
     private Model model;
-    private HttpSession session;
     private List<City> cities;
     private List<Post> posts;
 
@@ -33,7 +31,6 @@ public class PostControllerTest {
         postService = mock(PostService.class);
         cityService = mock(CityService.class);
         model = mock(Model.class);
-        session = mock(HttpSession.class);
         postController = new PostController(
                 postService,
                 cityService
@@ -63,7 +60,7 @@ public class PostControllerTest {
     @Test
     public void whenPosts() {
         when(postService.findAll()).thenReturn(posts);
-        String page = postController.posts(model, session);
+        String page = postController.posts(model);
         verify(model).addAttribute("posts", posts);
         assertThat(page, is("post/posts"));
     }
@@ -86,7 +83,7 @@ public class PostControllerTest {
         when(postService.findById(postId)).thenReturn(forUpdate);
         when(cityService.findById(cityId)).thenReturn(currentCity);
         when(cityService.getAllCities()).thenReturn(cities);
-        String page = postController.formUpdatePost(model, postId, session);
+        String page = postController.formUpdatePost(model, postId);
         verify(model).addAttribute("post", forUpdate);
         verify(model).addAttribute("city", currentCity);
         verify(model).addAttribute("cities", cities);

@@ -58,17 +58,18 @@
                 <form th:action="@{/registration}" method="POST">
                     <input type="hidden" name="id" value="0">
                     <div class="form-group">
-                        <p><label>Имя
-                            <input type="text" class="form-control" name="name">
-                        </label></p>
-                        <p><label>email
-                            <input type="text" class="form-control" name="email">
-                        </label></p>
-                        <p><label>password
-                            <input type="password" class="form-control" name="password">
-                        </label></p>
+                        <label>Имя
+                            <input type="text" class="form-control" name="name" placeholder="введите" required>
+                        </label><br><br>
+                        <label>email
+                            <input type="text" class="form-control" name="email" placeholder="введите email" required>
+                        </label><br><br>
+                        <label>password
+                            <input type="password" class="form-control" name="password"
+                                   placeholder="придумайте password" required>
+                        </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Зарегистрировать</button>
+                    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
                 </form>
             </div>
         </div>

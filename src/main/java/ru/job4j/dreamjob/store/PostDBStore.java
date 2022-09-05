@@ -10,12 +10,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Repository
-public class PostDBStore {
+public class PostDBStore implements Store<Post> {
 
     private final BasicDataSource pool;
     private static final Logger LOG = Logger.getLogger(PostDBStore.class);
@@ -24,6 +25,7 @@ public class PostDBStore {
         this.pool = pool;
     }
 
+    @Override
     public List<Post> findAll() {
         String sql = "SELECT * FROM post ORDER BY 1";
         List<Post> posts = new ArrayList<>();
@@ -51,6 +53,7 @@ public class PostDBStore {
         return posts;
     }
 
+    @Override
     public Post add(Post post) {
         String sql = "INSERT INTO post (name, description, created, "
                 + "city_id, visible) VALUES (?, ?, ?, ?, ?)";
@@ -60,7 +63,9 @@ public class PostDBStore {
                     cn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setTimestamp(3,
+                    Timestamp.valueOf(LocalDateTime.now().withNano(0))
+            );
             ps.setInt(4, post.getCity().getId());
             ps.setBoolean(5, post.isVisible());
             ps.execute();
@@ -76,6 +81,7 @@ public class PostDBStore {
         return post;
     }
 
+    @Override
     public void update(Post post) {
         String sql = "UPDATE post SET name = ? , description = ? , "
                 + "created = ? , city_id = ? WHERE id = ?";
@@ -84,7 +90,9 @@ public class PostDBStore {
             PreparedStatement ps = cn.prepareStatement(sql);
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            ps.setTimestamp(3, new Timestamp(new Date().getTime()));
+            ps.setTimestamp(3,
+                    Timestamp.valueOf(LocalDateTime.now().withNano(0))
+            );
             ps.setInt(4, post.getCity().getId());
             ps.setInt(5, post.getId());
             ps.executeUpdate();
@@ -94,6 +102,7 @@ public class PostDBStore {
         }
     }
 
+    @Override
     public Post findById(int id) {
         String sql = "SELECT * FROM post WHERE id = ?";
         LOG.info("Trying to find a post by id");

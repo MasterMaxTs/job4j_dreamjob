@@ -23,16 +23,20 @@ public class UserController implements ManageSession {
         this.userService = userService;
     }
 
+    @ModelAttribute("user")
+    public User getUser(HttpSession session) {
+        return getUserFromSession(session);
+    }
+
     @GetMapping("/addUser")
-    public String add(Model model, HttpSession session) {
-        addUserInModelFromSession(model, session);
+    public String add() {
         return "user/addUser";
     }
 
     @PostMapping("/registration")
     public String registration(@ModelAttribute User user,
                                RedirectAttributes redirectAttributes) {
-        Optional<User> regUser = userService.add(user);
+        Optional<User> regUser = Optional.ofNullable(userService.add(user));
         if (regUser.isEmpty()) {
            String message = "Пользователь с почтой " + user.getEmail() + " "
                             + "уже существует!";
@@ -45,28 +49,22 @@ public class UserController implements ManageSession {
 
     @GetMapping("/success")
     public String informToSuccess(@RequestParam("user") String userName,
-                                  Model model,
-                                  HttpSession session) {
+                                  Model model) {
         model.addAttribute("name", userName);
-        addUserInModelFromSession(model, session);
         return "user/registration_success";
     }
 
     @GetMapping("/fail")
     public String informToFail(@RequestParam("msg") String msg,
-                               Model model,
-                               HttpSession session) {
+                               Model model) {
         model.addAttribute("message", msg);
-        addUserInModelFromSession(model, session);
         return "user/registration_fail";
     }
 
     @GetMapping("/loginPage")
     public String loginPage(Model model,
-                            @RequestParam(value = "fail", required = false) Boolean fail,
-                            HttpSession session) {
+                            @RequestParam(value = "fail", required = false) Boolean fail) {
         model.addAttribute("fail", fail != null);
-        addUserInModelFromSession(model, session);
         return "user/login";
     }
 
@@ -77,7 +75,7 @@ public class UserController implements ManageSession {
         Optional<User> userDb =
                         userService.findUserByEmailAndPwd(
                                 user.getEmail(), user.getPassword()
-                );
+                        );
         if (userDb.isEmpty()) {
             redirectAttributes.addAttribute("fail", true);
             return "redirect:/loginPage";

@@ -6,9 +6,22 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Set;
 
 @Component
 public class AuthFilter implements Filter {
+
+    private static final Set<String> STRINGS = Set.of("index",
+                                                      "loginPage",
+                                                      "login",
+                                                      "addUser",
+                                                      "registration",
+                                                      "success",
+                                                      "fail");
+
+    private boolean isEnds(String uri) {
+        return STRINGS.stream().anyMatch(uri::endsWith);
+    }
 
     @Override
     public void doFilter(ServletRequest request,
@@ -17,14 +30,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String uri = req.getRequestURI();
-        if (uri.endsWith("index")
-                || uri.endsWith("loginPage")
-                || uri.endsWith("login")
-                || uri.endsWith("addUser")
-                || uri.endsWith("registration")
-                || uri.endsWith("success")
-                || uri.endsWith("fail")
-        ) {
+        if (isEnds(uri)) {
             chain.doFilter(req, res);
             return;
         }

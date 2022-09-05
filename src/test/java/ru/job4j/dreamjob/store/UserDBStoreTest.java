@@ -1,9 +1,7 @@
 package ru.job4j.dreamjob.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.User;
 
@@ -18,13 +16,23 @@ import static org.junit.Assert.*;
 
 public class UserDBStoreTest {
 
-    private BasicDataSource pool;
+    private static BasicDataSource pool;
     private UserDBStore store;
     private List<User> users;
 
+    @BeforeClass
+    public static void initPool() {
+        pool = new Main().loadPool();
+    }
+
+    @AfterClass
+    public static void closePool() throws SQLException {
+        pool.close();
+    }
+
+
     @Before
     public void whenSetUp() {
-        pool = new Main().loadPool();
         store = new UserDBStore(pool);
         User first = new User(1, "name1", "email1", "pass1");
         User second= new User(2, "name2", "email2", "pass2");
@@ -32,12 +40,10 @@ public class UserDBStoreTest {
     }
 
     @After
-    public void wipeTable() {
+    public void wipeTable() throws SQLException {
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement("DELETE FROM users");
             ps.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -51,7 +57,7 @@ public class UserDBStoreTest {
     public void whenAddUser() {
         User user= users.get(0);
         store.add(user);
-        User userInDb = store.findById(user.getId()).get();
+        User userInDb = store.findById(user.getId());
         assertThat(userInDb.getName(), is(user.getName()));
         assertThat(userInDb.getEmail(), is(user.getEmail()));
     }
@@ -63,7 +69,7 @@ public class UserDBStoreTest {
         user.setEmail("new email");
         store.update(user);
         assertThat(
-                store.findById(user.getId()).get().getEmail(),
+                store.findById(user.getId()).getEmail(),
                 is("new email")
         );
     }
@@ -72,16 +78,16 @@ public class UserDBStoreTest {
     public void whenFindUserByIdThanSuccess() {
         users.forEach(store::add);
         User expected = users.get(1);
-        User userInDb = store.findById(expected.getId()).get();
+        User userInDb = store.findById(expected.getId());
         assertThat(userInDb.getName(), is(expected.getName()));
         assertThat(userInDb.getEmail(), is(expected.getEmail()));
     }
 
     @Test
-    public void whenFindUserByIdThanEmpty() {
+    public void whenFindUserByIdThanNull() {
         users.forEach(store::add);
-        Optional<User> userInDb = store.findById(3);
-        assertThat(userInDb, is(Optional.empty()));
+        User userInDb = store.findById(3);
+        assertNull(userInDb);
     }
 
     @Test

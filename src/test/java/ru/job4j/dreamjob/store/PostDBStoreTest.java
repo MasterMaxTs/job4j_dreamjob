@@ -1,9 +1,7 @@
 package ru.job4j.dreamjob.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
@@ -20,13 +18,22 @@ import static org.junit.Assert.*;
 
 public class PostDBStoreTest {
 
-    private BasicDataSource pool;
+    private static BasicDataSource pool;
     private PostDBStore store;
     private List<Post> posts;
 
+    @BeforeClass
+    public static void initPool() {
+        pool = new Main().loadPool();
+    }
+
+    @AfterClass
+    public static void closePool() throws SQLException {
+        pool.close();
+    }
+
     @Before
     public void whenSetUp() {
-        pool = new Main().loadPool();
         store = new PostDBStore(pool);
         Timestamp now = new Timestamp(new Date().getTime());
         City firstCity = new City(1, "Краснодар");
@@ -41,10 +48,12 @@ public class PostDBStoreTest {
     }
 
     @After
-    public void wipeTable() throws SQLException {
+    public void wipeTable() {
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement("DELETE FROM post");
             ps.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

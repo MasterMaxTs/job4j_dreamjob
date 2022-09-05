@@ -15,7 +15,7 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 @Repository
-public class UserDBStore {
+public class UserDBStore implements Store<User> {
 
     private final BasicDataSource pool;
     private static final Logger LOG = Logger.getLogger("UserDBStore.class");
@@ -24,6 +24,7 @@ public class UserDBStore {
         this.pool = pool;
     }
 
+    @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -48,8 +49,9 @@ public class UserDBStore {
         return users;
     }
 
-    public Optional<User> add(User user) {
-        Optional<User> rsl = Optional.empty();
+    @Override
+    public User add(User user) {
+        User rsl = null;
         String sql = "INSERT INTO users (name, email, password)"
                 + "VALUES (? , ? , ?)";
         LOG.info("Trying to add a user to DB");
@@ -66,13 +68,14 @@ public class UserDBStore {
                 }
             }
             LOG.info("Success!");
-            rsl = Optional.of(user);
+            rsl = user;
         } catch (SQLException e) {
             LOG.error("Not successful: " + e.getMessage(), e);
         }
         return rsl;
     }
 
+    @Override
     public void update(User user) {
         String sql = "UPDATE users SET name = ? , email = ? , password = ?"
                 + "WHERE id = ?";
@@ -90,8 +93,8 @@ public class UserDBStore {
         }
     }
 
-    public Optional<User> findById(int id) {
-        Optional<User> rsl = Optional.empty();
+    public User findById(int id) {
+        User rsl = null;
         String sql = "SELECT * FROM users WHERE id = ?";
         LOG.info("Trying to find a user by id");
         try (Connection cn = pool.getConnection()) {
@@ -99,14 +102,10 @@ public class UserDBStore {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    rsl = Optional.of(
-                                    new User(
-                                            it.getInt("id"),
-                                            it.getString("name"),
-                                            it.getString("email"),
-                                            ""
-                                    )
-                    );
+                    rsl = new User(it.getInt("id"),
+                                   it.getString("name"),
+                                   it.getString("email"),
+                            "");
                 }
             }
             LOG.info("Success!");

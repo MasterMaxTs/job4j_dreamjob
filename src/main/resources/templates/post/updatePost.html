@@ -60,20 +60,20 @@
                 <form th:action="@{/updatePost}" method="POST" th:object="${post}">
                     <input type="hidden" name="id" th:field="*{id}"/>
                     <div class="form-group">
-                        <p><label>Имя
+                        <label>Имя
                             <input type="text" class="form-control" name="name" th:field="*{name}">
-                        </label></p>
-                        <p><label>Описание
-                            <input type="text" class="form-control" name="description" th:field="*{description}">
-                        </label></p>
-                        <p><label for="city.id">Город
+                        </label><br><br>
+                        <label>Описание<br>
+                            <textarea name="description" style="height: 200px; width: 350px" th:field="*{description}"></textarea>
+                        </label><br><br>
+                        <label for="city.id">Город<br>
                             <input type="text" class="form-control" disabled="disabled" name="city.name" th:value="${city.name}">
                             <select class="form-control" name="city.id" id="city.id">
                                 <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
                             </select>
-                        </label></p>
+                        </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-warning">Редактировать</button>
                 </form>
             </div>
         </div>

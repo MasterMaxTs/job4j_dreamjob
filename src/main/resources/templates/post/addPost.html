@@ -68,17 +68,17 @@
                         </label></p>
                     </div>
                     <div class="form-group">
-                        <p><label>Город
+                        <label>Город
                         <select class="form-control" name="city.id">
-                            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option>
+                            <option th:each="city : ${cities}" th:value="${city.id}" th:text="${city.name}"></option><br>
                         </select>
-                        </label></p>
+                        </label>
                     </div>
                     <div class="form-check">
-                        <p><input type="checkbox" class="form-check-input" name="visible" id="visible">
-                            <label class="form-check-label" for="visible">Опубликовать</label></p>
+                        <input type="checkbox" class="form-check-input" name="visible" id="visible">
+                            <label class="form-check-label" for="visible">Опубликовать</label><br><br>
                     </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="submit" class="btn btn-success">Сохранить</button>
                 </form>
             </div>
         </div>

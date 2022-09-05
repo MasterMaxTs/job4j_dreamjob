@@ -56,19 +56,20 @@
                         <input type="hidden" name="id" value="0">
                         <input type="hidden" name="photoId" value="0">
                         <div class="form-group">
-                            <p> <label>Имя
-                                <input type="text" class="form-control" name="name">
-                            </label> </p>
+                            <label>Имя
+                                <input type="text" class="form-control" name="name" placeholder="Введите"><br>
+                            </label>
                             <div class="form-group">
-                                <p> <label>Фотография
-                                    <input type="file" class="form-control" name="file">
-                                </label></p>
+                                <label>Фотография
+                                    <input type="file" class="form-control" name="file"><br>
+                                </label>
                             </div>
-                            <p> <label>Описание
-                                <input type="text" class="form-control" name="description">
-                            </label> </p>
+                            <label>Описание<br>
+                                <textarea name="description" style="height: 200px; width: 350px"
+                                          placeholder="Введите описание" required="required"></textarea><br>
+                            </label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <button type="submit" class="btn btn-success">Сохранить</button>
                     </form>
                 </div>
             </div>

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
+import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.services.CandidateService;
 
 import javax.servlet.http.HttpSession;
@@ -26,10 +27,14 @@ public class CandidateController implements ManageSession {
         this.candidateService = candidateService;
     }
 
+    @ModelAttribute("user")
+    public User getUser(HttpSession session) {
+        return getUserFromSession(session);
+    }
+
     @GetMapping("/candidates")
-    public String candidates(Model model, HttpSession session) {
+    public String candidates(Model model) {
         model.addAttribute("candidates", candidateService.findAll());
-        addUserInModelFromSession(model, session);
         return "candidate/candidates";
     }
 
@@ -42,7 +47,7 @@ public class CandidateController implements ManageSession {
     }
 
     @GetMapping("/photoCandidate/{candidateId}")
-    public ResponseEntity<Resource> download(@PathVariable("candidateId") Integer candidateId) {
+    public ResponseEntity<Resource> download(@PathVariable("candidateId") int candidateId) {
         Candidate candidate = candidateService.findById(candidateId);
         return ResponseEntity.ok()
                 .headers(new HttpHeaders())
@@ -52,17 +57,15 @@ public class CandidateController implements ManageSession {
     }
 
     @GetMapping("/formAddCandidate")
-    public String createCandidate(Model model, HttpSession session) {
-        addUserInModelFromSession(model, session);
+    public String createCandidate() {
         return "candidate/addCandidate";
     }
 
     @GetMapping("/formUpdateCandidate/{candidateId}")
     public String formUpdateCandidate(Model model,
-                                      @PathVariable("candidateId") int id,
-                                      HttpSession session) {
+                                      @PathVariable("candidateId") int id
+    ) {
         model.addAttribute("candidate", candidateService.findById(id));
-        addUserInModelFromSession(model, session);
         return "candidate/updateCandidate";
     }
 

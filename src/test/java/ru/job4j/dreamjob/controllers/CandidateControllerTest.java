@@ -7,14 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.services.CandidateService;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 public class CandidateControllerTest {
@@ -23,14 +22,12 @@ public class CandidateControllerTest {
     private CandidateController controller;
     private Model model;
     private MultipartFile file;
-    private HttpSession session;
     private List<Candidate> candidates;
 
     @Before
     public void whenSetUp() {
         candidateService = mock(CandidateService.class);
         model = mock(Model.class);
-        session = mock(HttpSession.class);
         file = mock(MultipartFile.class);
         controller = new CandidateController(candidateService);
         candidates = List.of(
@@ -52,7 +49,7 @@ public class CandidateControllerTest {
     @Test
     public void whenCandidates() {
         when(candidateService.findAll()).thenReturn(candidates);
-        String page = controller.candidates(model, session);
+        String page = controller.candidates(model);
         verify(model).addAttribute("candidates", candidates);
         assertThat(page, is("candidate/candidates"));
     }
@@ -70,7 +67,7 @@ public class CandidateControllerTest {
         Candidate forUpdate = candidates.get(0);
         int id = forUpdate.getId();
         when(candidateService.findById(id)).thenReturn(forUpdate);
-        String page = controller.formUpdateCandidate(model, id, session);
+        String page = controller.formUpdateCandidate(model, id);
         verify(model).addAttribute("candidate", candidateService.findById(id));
         assertThat(page, is("candidate/updateCandidate"));
     }

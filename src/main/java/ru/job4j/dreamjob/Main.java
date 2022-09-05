@@ -32,7 +32,7 @@ public class Main {
         return cfg;
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public BasicDataSource loadPool() {
         Properties cfg = loadDbProperties();
         BasicDataSource pool = new BasicDataSource();

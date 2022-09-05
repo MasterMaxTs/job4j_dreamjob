@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.dreamjob.model.Post;
+import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.services.CityService;
 import ru.job4j.dreamjob.services.PostService;
 
@@ -22,10 +23,14 @@ public class PostController implements ManageSession {
         this.cityService = cityService;
     }
 
+    @ModelAttribute("user")
+    public User getUser(HttpSession session) {
+        return getUserFromSession(session);
+    }
+
     @GetMapping("/posts")
-    public String posts(Model model, HttpSession session) {
+    public String posts(Model model) {
         model.addAttribute("posts", postService.findAll());
-        addUserInModelFromSession(model, session);
         return "post/posts";
     }
 
@@ -37,21 +42,19 @@ public class PostController implements ManageSession {
         return "redirect:/posts";
     }
     @GetMapping("/formAddPost")
-    public String addPost(Model model, HttpSession session) {
+    public String addPost(Model model) {
         model.addAttribute("cities", cityService.getAllCities());
-        addUserInModelFromSession(model, session);
         return "post/addPost";
     }
 
     @GetMapping("/formUpdatePost/{postId}")
     public String formUpdatePost(Model model,
-                                 @PathVariable("postId") int id,
-                                 HttpSession session) {
+                                 @PathVariable("postId") int id
+    ) {
         Post post = postService.findById(id);
         model.addAttribute("post", post);
         model.addAttribute("city", cityService.findById(post.getCity().getId()));
         model.addAttribute("cities", cityService.getAllCities());
-        addUserInModelFromSession(model, session);
         return "post/updatePost";
     }
 
