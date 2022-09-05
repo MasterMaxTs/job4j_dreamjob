@@ -33,13 +33,12 @@ public class UserDBStore implements Store<User> {
             PreparedStatement ps = cn.prepareStatement(sql);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    users.add(
-                            new User(it.getInt("id"),
-                                    it.getString("name"),
-                                    it.getString("email"),
-                                    ""
-                            )
+                    User user = new User(it.getString("name"),
+                            it.getString("email"),
+                            ""
                     );
+                    user.setId(it.getInt("id"));
+                    users.add(user);
                 }
             }
             LOG.info("Success!");
@@ -102,10 +101,11 @@ public class UserDBStore implements Store<User> {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    rsl = new User(it.getInt("id"),
-                                   it.getString("name"),
+                    rsl = new User(it.getString("name"),
                                    it.getString("email"),
-                            "");
+                            ""
+                    );
+                    rsl.setId(it.getInt("id"));
                 }
             }
             LOG.info("Success!");
@@ -125,13 +125,12 @@ public class UserDBStore implements Store<User> {
             ps.setString(2, password);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    rsl = Optional.of(
-                            new User(it.getInt("id"),
-                                    it.getString("name"),
-                                    it.getString("email"),
-                                    it.getString("password")
-                            )
+                    User user = new User(it.getString("name"),
+                            it.getString("email"),
+                            it.getString("password")
                     );
+                    user.setId(it.getInt("id"));
+                    rsl = Optional.of(user);
                 }
             }
             LOG.info("Success!");

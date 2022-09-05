@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -34,16 +33,14 @@ public class PostDBStore implements Store<Post> {
             PreparedStatement ps = cn.prepareStatement(sql);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(
-                            new Post(
-                                    it.getInt("id"),
-                                    it.getString("name"),
-                                    it.getString("description"),
-                                    it.getTimestamp("created"),
-                                    new City(it.getInt("city_id"), ""),
-                                    it.getBoolean("visible")
-                            )
+                    Post post = new Post(it.getString("name"),
+                            it.getString("description"),
+                            it.getTimestamp("created"),
+                            new City(it.getInt("city_id"), ""),
+                            it.getBoolean("visible")
                     );
+                    post.setId(it.getInt("id"));
+                    posts.add(post);
                 }
             }
             LOG.info("Success!");
@@ -104,6 +101,7 @@ public class PostDBStore implements Store<Post> {
 
     @Override
     public Post findById(int id) {
+        Post rsl = null;
         String sql = "SELECT * FROM post WHERE id = ?";
         LOG.info("Trying to find a post by id");
         try (Connection cn = pool.getConnection()) {
@@ -111,19 +109,18 @@ public class PostDBStore implements Store<Post> {
            ps.setInt(1, id);
            try (ResultSet it = ps.executeQuery()) {
                if (it.next()) {
-                   return new Post(
-                           it.getInt("id"),
-                           it.getString("name"),
-                           it.getString("description"),
-                           it.getTimestamp("created"),
-                           new City(it.getInt("city_id"), ""),
-                           it.getBoolean("visible")
+                   rsl = new Post(it.getString("name"),
+                                  it.getString("description"),
+                                  it.getTimestamp("created"),
+                                  new City(it.getInt("city_id"), ""),
+                                  it.getBoolean("visible")
                    );
+                   rsl.setId(it.getInt("id"));
                }
            }
         } catch (Exception e) {
             LOG.error("Not successful: " + e.getMessage(), e);
         }
-        return null;
+        return rsl;
     }
 }

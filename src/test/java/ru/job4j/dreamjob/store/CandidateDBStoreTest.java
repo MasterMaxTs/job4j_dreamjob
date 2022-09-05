@@ -36,10 +36,10 @@ public class CandidateDBStoreTest {
         store = new CandidateDBStore(pool);
         Timestamp now = new Timestamp(new Date().getTime());
         Candidate firstCandidate = new Candidate(
-                1, "Maxim", "Middle Java Developer", now, new byte[]{}
+                "Maxim", "Middle Java Developer", now, new byte[]{}
         );
         Candidate secondCandidate = new Candidate(
-                2, "Viktoriya", "Senior Java Developer", now, new byte[]{}
+                "Viktoriya", "Senior Java Developer", now, new byte[]{}
         );
         candidates = List.of(firstCandidate, secondCandidate);
     }
@@ -58,14 +58,19 @@ public class CandidateDBStoreTest {
         store.add(firstCandidate);
         Candidate candidateInDb = store.findById(firstCandidate.getId());
         assertThat(candidateInDb.getName(), is(firstCandidate.getName()));
-        assertThat(candidateInDb.getDescription(), is(firstCandidate.getDescription()));
+        assertThat(candidateInDb.getDescription()
+                , is(firstCandidate.getDescription())
+        );
     }
 
     @Test
     public void whenFindAllCandidate() {
-        store.add(candidates.get(0));
-        store.add(candidates.get(1));
-        assertEquals(candidates, store.findAll());
+        candidates.forEach(store::add);
+        List<Candidate> rsl = store.findAll();
+        assertThat(rsl.get(0).getName(), is(candidates.get(0).getName()));
+        assertThat(rsl.get(1).getDescription()
+                , is(candidates.get(1).getDescription())
+        );
     }
 
     @Test
@@ -77,14 +82,19 @@ public class CandidateDBStoreTest {
         store.update(firstCandidate);
         Candidate candidateInDb = store.findById(firstCandidate.getId());
         assertThat(candidateInDb.getName(), is(firstCandidate.getName()));
-        assertThat(candidateInDb.getDescription(), is(firstCandidate.getDescription()));
+        assertThat(candidateInDb.getDescription()
+                , is(firstCandidate.getDescription())
+        );
     }
 
     @Test
     public void whenFindCandidateById() {
         Candidate firstCandidate = candidates.get(0);
         store.add(firstCandidate);
-        assertEquals(firstCandidate, store.findById(firstCandidate.getId()));
+        Candidate candidateInDb = store.findById(firstCandidate.getId());
+        assertThat(firstCandidate.getDescription()
+                , is(candidateInDb.getDescription())
+        );
         assertNull(store.findById(2));
     }
 }

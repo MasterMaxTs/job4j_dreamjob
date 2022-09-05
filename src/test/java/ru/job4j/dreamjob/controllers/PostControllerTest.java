@@ -9,7 +9,7 @@ import ru.job4j.dreamjob.services.CityService;
 import ru.job4j.dreamjob.services.PostService;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,22 +35,21 @@ public class PostControllerTest {
                 postService,
                 cityService
         );
+        final Timestamp created = Timestamp.valueOf(LocalDateTime.now());
         cities = List.of(
                 new City(1, "Москва"),
                 new City(2, "Краснодар")
         );
         posts = List.of(
-                    new Post(1,
-                            "New post",
+                    new Post("New post",
                             "desc",
-                            new Timestamp(new Date().getTime()),
+                            created,
                             cities.get(0),
                             true
                     ),
-                    new Post(2,
-                            "New post",
+                    new Post("New post",
                             "desc",
-                            new Timestamp(new Date().getTime()),
+                            created,
                             cities.get(1),
                             true
                     )

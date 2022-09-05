@@ -8,7 +8,6 @@ import ru.job4j.dreamjob.model.Candidate;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -30,15 +29,13 @@ public class CandidateDBStore implements Store<Candidate> {
             PreparedStatement ps = cn.prepareStatement(sql);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(
-                            new Candidate(
-                                        it.getInt("id"),
-                                        it.getString("name"),
-                                        it.getString("description"),
-                                        it.getTimestamp("created"),
-                                        it.getBytes("photo")
-                            )
+                    Candidate candidate = new Candidate(it.getString("name"),
+                            it.getString("description"),
+                            it.getTimestamp("created"),
+                            it.getBytes("photo")
                     );
+                    candidate.setId(it.getInt("id"));
+                    candidates.add(candidate);
                 }
             }
             LOG.info("Success!");
@@ -98,6 +95,7 @@ public class CandidateDBStore implements Store<Candidate> {
 
     @Override
     public Candidate findById(int id) {
+        Candidate rsl = null;
         String sql = "SELECT * FROM candidate WHERE id = ?";
         LOG.info("Trying to find a candidate by id");
         try (Connection cn = pool.getConnection()) {
@@ -105,19 +103,18 @@ public class CandidateDBStore implements Store<Candidate> {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Candidate(
-                            it.getInt("id"),
-                            it.getString("name"),
+                    rsl = new Candidate(it.getString("name"),
                             it.getString("description"),
                             it.getTimestamp("created"),
                             it.getBytes("photo")
                     );
+                    rsl.setId(it.getInt("id"));
                 }
             }
             LOG.info("Success!");
         } catch (Exception e) {
             LOG.error("Not successful: " + e.getMessage(), e);
         }
-        return null;
+        return rsl;
     }
 }

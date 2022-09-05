@@ -11,9 +11,8 @@ public class Candidate {
     private Timestamp created;
     private byte[] photo;
 
-    public Candidate(int id, String name, String description,
+    public Candidate(String name, String description,
                      Timestamp created, byte[] photo) {
-        this.id = id;
         this.name = name;
         this.description = description;
         this.created = created;

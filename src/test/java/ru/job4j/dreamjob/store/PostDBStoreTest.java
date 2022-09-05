@@ -39,10 +39,10 @@ public class PostDBStoreTest {
         City firstCity = new City(1, "Краснодар");
         City secondCity = new City(2, "Москва");
         Post firstPost = new Post(
-                1, "Java Junior Job", "Description", now, firstCity, true
+                "Java Junior Job", "Description", now, firstCity, true
         );
         Post secondPost = new Post(
-                2, "Java Middle Job", "Description", now, secondCity, true
+                "Java Middle Job", "Description", now, secondCity, true
         );
         posts = List.of(firstPost, secondPost);
     }
@@ -68,9 +68,10 @@ public class PostDBStoreTest {
 
     @Test
     public void whenFindAllPost() {
-        store.add(posts.get(0));
-        store.add(posts.get(1));
-        assertEquals(posts, store.findAll());
+        posts.forEach(store::add);
+        List<Post> rsl = store.findAll();
+        assertThat(rsl.get(0).getName(), is(posts.get(0).getName()));
+        assertThat(rsl.get(1).getDescription(), is(posts.get(1).getDescription()));
     }
 
     @Test
@@ -89,7 +90,8 @@ public class PostDBStoreTest {
     public void whenFindPostById() {
         Post firstPost = posts.get(0);
         store.add(firstPost);
-        assertEquals(firstPost, store.findById(firstPost.getId()));
+        assertThat(firstPost.getName(),
+                is(store.findById(firstPost.getId()).getName()));
         assertNull(store.findById(2));
     }
 }

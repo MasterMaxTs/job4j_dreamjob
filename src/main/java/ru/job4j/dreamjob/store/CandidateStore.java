@@ -20,7 +20,6 @@ public class CandidateStore implements Store<Candidate> {
     private CandidateStore() {
         candidates.put(1,
                         new Candidate(
-                                1,
                                 "Junior Java Developer",
                                 "here is description",
                                 new Timestamp(new Date().getTime()),
@@ -28,7 +27,6 @@ public class CandidateStore implements Store<Candidate> {
                         ));
         candidates.put(2,
                         new Candidate(
-                                2,
                                 "Middle Java Developer",
                                 "here is description",
                                 new Timestamp(new Date().getTime()),
@@ -36,7 +34,6 @@ public class CandidateStore implements Store<Candidate> {
                         ));
         candidates.put(3,
                         new Candidate(
-                                3,
                                 "Senior Java Developer",
                                 "here is description",
                                 new Timestamp(new Date().getTime()),

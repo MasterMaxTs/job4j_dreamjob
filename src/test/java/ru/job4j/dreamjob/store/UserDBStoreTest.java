@@ -30,12 +30,11 @@ public class UserDBStoreTest {
         pool.close();
     }
 
-
     @Before
     public void whenSetUp() {
         store = new UserDBStore(pool);
-        User first = new User(1, "name1", "email1", "pass1");
-        User second= new User(2, "name2", "email2", "pass2");
+        User first = new User("name1", "email1", "pass1");
+        User second= new User("name2", "email2", "pass2");
         users = List.of(first, second);
     }
 
@@ -50,7 +49,10 @@ public class UserDBStoreTest {
     @Test
     public void whenFindAllUsers() {
         users.forEach(store::add);
-        assertEquals(users, store.findAll());
+        List<User> rsl = store.findAll();
+        assertThat(rsl.get(0).getName(), is(users.get(0).getName()));
+        assertThat(rsl.get(1).getEmail(), is(users.get(1).getEmail()));
+        assertEquals(2, rsl.size());
     }
 
     @Test

@@ -6,6 +6,7 @@ import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,28 +20,25 @@ public class PostStore implements Store<Post> {
 
     private PostStore() {
         posts.put(1,
-                new Post(1,
-                        "Junior Java Job",
+                new Post("Junior Java Job",
                         "job description",
-                        new Timestamp(new Date().getTime()),
-                        new City(1, ""),
-                true)
-        );
-        posts.put(2,
-                new Post(2,
-                        "Middle Java Job",
-                        "job description",
-                        new Timestamp(new Date().getTime()),
+                        Timestamp.valueOf(LocalDateTime.now().withNano(0)),
                         new City(1, ""),
                         true
                 )
-
+        );
+        posts.put(2,
+                new Post("Middle Java Job",
+                        "job description",
+                        Timestamp.valueOf(LocalDateTime.now().withNano(0)),
+                        new City(1, ""),
+                        true
+                )
         );
         posts.put(3,
-                new Post(3,
-                        "Senior Java Job",
+                new Post("Senior Java Job",
                         "job description",
-                        new Timestamp(new Date().getTime()),
+                        Timestamp.valueOf(LocalDateTime.now().withNano(0)),
                         new City(1, ""),
                         true
                 )

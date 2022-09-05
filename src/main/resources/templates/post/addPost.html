@@ -60,12 +60,13 @@
                 <form th:action="@{/createPost}" method="POST">
                     <input type="hidden" name="id" value="0">
                     <div class="form-group">
-                        <p><label>Имя
-                            <input type="text" class="form-control" name="name">
-                        </label></p>
-                        <p><label>Описание
-                            <input type="text" class="form-control" name="description">
-                        </label></p>
+                        <label>Имя
+                            <input type="text" class="form-control" name="name" placeholder="введите название" required>
+                        </label><br><br>
+                        <label>Описание<br>
+                            <textarea name="description" style="height: 200px; width: 350px"
+                                      placeholder="введите описание" required></textarea>
+                        </label><br>
                     </div>
                     <div class="form-group">
                         <label>Город

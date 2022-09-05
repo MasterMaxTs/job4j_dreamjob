@@ -31,14 +31,12 @@ public class CandidateControllerTest {
         file = mock(MultipartFile.class);
         controller = new CandidateController(candidateService);
         candidates = List.of(
-                    new Candidate(1,
-                                "name1",
+                    new Candidate("name1",
                             "description1",
                                     new Timestamp(new Date().getTime()),
                                     new byte[]{}
                     ),
-                    new Candidate(2,
-                               "name2",
+                    new Candidate("name2",
                             "description2",
                                     new Timestamp(new Date().getTime()),
                                     new byte[]{}
