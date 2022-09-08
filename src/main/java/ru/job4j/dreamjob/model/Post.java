@@ -1,11 +1,10 @@
 package ru.job4j.dreamjob.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
-public class Post implements Serializable {
+public class Post {
 
     private int id;
     private String name;

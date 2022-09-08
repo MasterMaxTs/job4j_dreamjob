@@ -4,6 +4,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.*;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.Candidate;
+import ru.job4j.dreamjob.store.candidatestore.CandidateDBStore;
+import ru.job4j.dreamjob.store.candidatestore.CandidateStore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +20,7 @@ import static org.junit.Assert.*;
 public class CandidateDBStoreTest {
 
     private static BasicDataSource pool;
-    private CandidateDBStore store;
+    private CandidateStore store;
     private List<Candidate> candidates;
 
     @BeforeClass
@@ -47,7 +49,7 @@ public class CandidateDBStoreTest {
     @After
     public void wipeTable() throws SQLException {
         try (Connection cn = pool.getConnection()) {
-            PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate");
+            PreparedStatement ps = cn.prepareStatement("DELETE FROM candidates");
             ps.execute();
         }
     }

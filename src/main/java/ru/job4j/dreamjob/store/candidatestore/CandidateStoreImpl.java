@@ -1,4 +1,4 @@
-package ru.job4j.dreamjob.store;
+package ru.job4j.dreamjob.store.candidatestore;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
-public class CandidateStore implements Store<Candidate> {
+public class CandidateStoreImpl implements CandidateStore {
 
     private final Map<Integer, Candidate> candidates =
                                                     new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger(3);
 
-    private CandidateStore() {
+    private CandidateStoreImpl() {
         candidates.put(1,
                         new Candidate(
                                 "Junior Java Developer",

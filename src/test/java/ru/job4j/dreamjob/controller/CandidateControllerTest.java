@@ -1,11 +1,12 @@
-package ru.job4j.dreamjob.controllers;
+package ru.job4j.dreamjob.controller;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
-import ru.job4j.dreamjob.services.CandidateService;
+import ru.job4j.dreamjob.service.candidateservice.CandidateService;
+import ru.job4j.dreamjob.service.candidateservice.CandidateServiceImpl;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -26,7 +27,7 @@ public class CandidateControllerTest {
 
     @Before
     public void whenSetUp() {
-        candidateService = mock(CandidateService.class);
+        candidateService = mock(CandidateServiceImpl.class);
         model = mock(Model.class);
         file = mock(MultipartFile.class);
         controller = new CandidateController(candidateService);

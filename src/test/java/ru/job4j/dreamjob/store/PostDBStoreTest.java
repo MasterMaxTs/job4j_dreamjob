@@ -5,6 +5,8 @@ import org.junit.*;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
+import ru.job4j.dreamjob.store.poststore.PostDBStore;
+import ru.job4j.dreamjob.store.poststore.PostStore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +21,7 @@ import static org.junit.Assert.*;
 public class PostDBStoreTest {
 
     private static BasicDataSource pool;
-    private PostDBStore store;
+    private PostStore store;
     private List<Post> posts;
 
     @BeforeClass
@@ -39,10 +41,10 @@ public class PostDBStoreTest {
         City firstCity = new City(1, "Краснодар");
         City secondCity = new City(2, "Москва");
         Post firstPost = new Post(
-                "Java Junior Job", "Description", now, firstCity, true
+                "Java Junior Job", "Description1", now, firstCity, true
         );
         Post secondPost = new Post(
-                "Java Middle Job", "Description", now, secondCity, true
+                "Java Middle Job", "Description2", now, secondCity, true
         );
         posts = List.of(firstPost, secondPost);
     }
@@ -50,7 +52,7 @@ public class PostDBStoreTest {
     @After
     public void wipeTable() {
         try (Connection cn = pool.getConnection()) {
-            PreparedStatement ps = cn.prepareStatement("DELETE FROM post");
+            PreparedStatement ps = cn.prepareStatement("DELETE FROM posts");
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,5 +95,15 @@ public class PostDBStoreTest {
         assertThat(firstPost.getName(),
                 is(store.findById(firstPost.getId()).getName()));
         assertNull(store.findById(2));
+    }
+
+    @Test
+    public void whenDeletePost(){
+        posts.forEach(store::add);
+        Post post= posts.get(0);
+        store.delete(post.getId());
+        List<Post> rsl = store.findAll();
+        assertEquals(1, rsl.size());
+        assertThat(rsl.get(0).getName(), is(posts.get(1).getName()));
     }
 }

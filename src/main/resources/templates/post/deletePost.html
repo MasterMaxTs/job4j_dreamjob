@@ -24,12 +24,14 @@
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Работа мечты</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" th:href="@{/index}">Главная <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link active" th:href="@{/index}">Главная <span
+                        class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" th:href="@{/posts}">Вакансии</a>
                 <a class="nav-item nav-link" th:href="@{/formAddPost}">Добавить вакансию</a>
                 <a class="nav-item nav-link" th:href="@{/candidates}">Кандидаты</a>
@@ -50,25 +52,33 @@
     </nav>
     <p/>
     <div class="row">
-        <div class="card" style="width: 50%">
-            <div class="card-header">
-                Зарегистрироваться.
-            </div>
-            <div class="card-body">
-                <form th:action="@{/registration}" method="POST">
-                    <div class="form-group">
-                        <label>Имя
-                            <input type="text" class="form-control" name="name" placeholder="введите имя" required>
-                        </label><br><br>
-                        <label>email
-                            <input type="text" class="form-control" name="email" placeholder="введите email" required>
-                        </label><br><br>
-                        <label>password
-                            <input type="password" class="form-control" name="password"
-                                   placeholder="придумайте password" required>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+        <div class="card" style="width: 100%">
+            <div class="card-header"> Удалить вакансию.
+                <table class="table">
+                    <caption style="caption-side: top; text-align: right" ></caption>
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Описание</th>
+                        <th scope="col">Город</th>
+                        <th scope="col">Создано</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:object="${post}">
+                        <td th:text="${post.id}"/>
+                        <td th:text="${post.name}"/>
+                        <td th:text="${post.description}"/>
+                        <td th:text="${post.city.name}"/>
+                        <td th:text="${post.created}"/>
+                    </tr>
+                    </tbody>
+                </table>
+                <form th:action="@{/deletePost}" method="GET">
+                    <input type="hidden" name="id" th:value="${post.id}"/>
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                    <input type="button" class="btn btn-secondary" value="Отмена" onclick="window.location.href='/posts'"/>
                 </form>
             </div>
         </div>

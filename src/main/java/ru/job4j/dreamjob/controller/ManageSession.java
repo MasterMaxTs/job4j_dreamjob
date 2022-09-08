@@ -1,4 +1,4 @@
-package ru.job4j.dreamjob.controllers;
+package ru.job4j.dreamjob.controller;
 
 import ru.job4j.dreamjob.model.User;
 

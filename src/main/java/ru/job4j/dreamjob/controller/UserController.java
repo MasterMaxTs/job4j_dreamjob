@@ -1,5 +1,6 @@
-package ru.job4j.dreamjob.controllers;
+package ru.job4j.dreamjob.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.dreamjob.model.User;
-import ru.job4j.dreamjob.services.UserService;
+import ru.job4j.dreamjob.service.userservice.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,6 +20,7 @@ public class UserController implements ManageSession {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -36,7 +38,7 @@ public class UserController implements ManageSession {
     @PostMapping("/registration")
     public String registration(@ModelAttribute User user,
                                RedirectAttributes redirectAttributes) {
-        Optional<User> regUser = Optional.ofNullable(userService.add(user));
+        Optional<User> regUser = userService.add(user);
         if (regUser.isEmpty()) {
            String message = "Пользователь с почтой " + user.getEmail() + " "
                             + "уже существует!";

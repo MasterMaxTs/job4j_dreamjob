@@ -1,32 +1,31 @@
-package ru.job4j.dreamjob.store;
+package ru.job4j.dreamjob.store.poststore;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PostDBStore implements Store<Post> {
+public class PostDBStore implements PostStore {
 
     private final BasicDataSource pool;
     private static final Logger LOG = Logger.getLogger(PostDBStore.class);
 
+    @Autowired
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
 
     @Override
     public List<Post> findAll() {
-        String sql = "SELECT * FROM post ORDER BY 1";
+        String sql = "SELECT * FROM posts ORDER BY 1";
         List<Post> posts = new ArrayList<>();
         LOG.info("Trying to get all posts from DB");
         try (Connection cn = pool.getConnection()) {
@@ -52,7 +51,7 @@ public class PostDBStore implements Store<Post> {
 
     @Override
     public Post add(Post post) {
-        String sql = "INSERT INTO post (name, description, created, "
+        String sql = "INSERT INTO posts (name, description, created, "
                 + "city_id, visible) VALUES (?, ?, ?, ?, ?)";
         LOG.info("Trying to add a post to DB");
         try (Connection cn = pool.getConnection()) {
@@ -80,8 +79,8 @@ public class PostDBStore implements Store<Post> {
 
     @Override
     public void update(Post post) {
-        String sql = "UPDATE post SET name = ? , description = ? , "
-                + "created = ? , city_id = ? WHERE id = ?";
+        String sql = "UPDATE posts SET name = ? , description = ? , "
+                + "created = ? , city_id = ? , visible = ? WHERE id = ?";
         LOG.info("Trying to update post in the DB");
         try (Connection cn = pool.getConnection()) {
             PreparedStatement ps = cn.prepareStatement(sql);
@@ -91,7 +90,8 @@ public class PostDBStore implements Store<Post> {
                     Timestamp.valueOf(LocalDateTime.now().withNano(0))
             );
             ps.setInt(4, post.getCity().getId());
-            ps.setInt(5, post.getId());
+            ps.setBoolean(5, post.isVisible());
+            ps.setInt(6, post.getId());
             ps.executeUpdate();
             LOG.info("Success!");
         } catch (Exception e) {
@@ -102,7 +102,7 @@ public class PostDBStore implements Store<Post> {
     @Override
     public Post findById(int id) {
         Post rsl = null;
-        String sql = "SELECT * FROM post WHERE id = ?";
+        String sql = "SELECT * FROM posts WHERE id = ?";
         LOG.info("Trying to find a post by id");
         try (Connection cn = pool.getConnection()) {
            PreparedStatement ps = cn.prepareStatement(sql);
@@ -122,5 +122,19 @@ public class PostDBStore implements Store<Post> {
             LOG.error("Not successful: " + e.getMessage(), e);
         }
         return rsl;
+    }
+
+    @Override
+    public void delete(int id) {
+        String sql = "DELETE FROM posts WHERE id = ?";
+        LOG.info("Trying to delete a post by id");
+        try (Connection cn = pool.getConnection()) {
+            PreparedStatement ps = cn.prepareStatement(sql);
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (Exception e) {
+            LOG.error("Not successful: " + e.getMessage(), e);
+        }
     }
 }

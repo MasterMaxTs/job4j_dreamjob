@@ -4,6 +4,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.*;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.User;
+import ru.job4j.dreamjob.store.userstore.UserDBStore;
+import ru.job4j.dreamjob.store.userstore.UserStore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +19,7 @@ import static org.junit.Assert.*;
 public class UserDBStoreTest {
 
     private static BasicDataSource pool;
-    private UserDBStore store;
+    private UserStore store;
     private List<User> users;
 
     @BeforeClass

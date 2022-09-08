@@ -1,4 +1,4 @@
-package ru.job4j.dreamjob.store;
+package ru.job4j.dreamjob.store.poststore;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
@@ -13,12 +13,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
-public class PostStore implements Store<Post> {
+public class PostStoreImpl implements PostStore {
 
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger(3);
 
-    private PostStore() {
+    private PostStoreImpl() {
         posts.put(1,
                 new Post("Junior Java Job",
                         "job description",
@@ -64,6 +64,11 @@ public class PostStore implements Store<Post> {
     @Override
     public Post findById(int id) {
         return posts.get(id);
+    }
+
+    @Override
+    public void delete(int id) {
+        posts.remove(id);
     }
 
     @Override

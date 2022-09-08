@@ -53,11 +53,9 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/createCandidate}" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="0">
-                        <input type="hidden" name="photoId" value="0">
                         <div class="form-group">
                             <label>Имя
-                                <input type="text" class="form-control" name="name" placeholder="введите имя"><br>
+                                <input type="text" class="form-control" name="name" placeholder="введите имя" required><br>
                             </label>
                             <div class="form-group">
                                 <label>Фотография
@@ -66,7 +64,7 @@
                             </div>
                             <label>Описание<br>
                                 <textarea name="description" style="height: 200px; width: 350px"
-                                          placeholder="введите описание" required="required"></textarea><br>
+                                          placeholder="введите описание" required></textarea><br>
                             </label>
                         </div>
                         <button type="submit" class="btn btn-success">Сохранить</button>

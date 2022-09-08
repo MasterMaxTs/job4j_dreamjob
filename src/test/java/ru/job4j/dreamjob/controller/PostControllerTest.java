@@ -1,12 +1,12 @@
-package ru.job4j.dreamjob.controllers;
+package ru.job4j.dreamjob.controller;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.ui.Model;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
-import ru.job4j.dreamjob.services.CityService;
-import ru.job4j.dreamjob.services.PostService;
+import ru.job4j.dreamjob.service.cityservice.CityServiceImpl;
+import ru.job4j.dreamjob.service.postservice.PostServiceImpl;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -19,8 +19,8 @@ import static org.mockito.Mockito.*;
 
 public class PostControllerTest {
 
-    private PostService postService;
-    private CityService cityService;
+    private PostServiceImpl postService;
+    private CityServiceImpl cityService;
     private PostController postController;
     private Model model;
     private List<City> cities;
@@ -28,13 +28,10 @@ public class PostControllerTest {
 
     @Before
     public void whenSetUp() {
-        postService = mock(PostService.class);
-        cityService = mock(CityService.class);
+        postService = mock(PostServiceImpl.class);
+        cityService = mock(CityServiceImpl.class);
         model = mock(Model.class);
-        postController = new PostController(
-                postService,
-                cityService
-        );
+        postController = new PostController(postService, cityService);
         final Timestamp created = Timestamp.valueOf(LocalDateTime.now());
         cities = List.of(
                 new City(1, "Москва"),
@@ -72,7 +69,6 @@ public class PostControllerTest {
         assertThat(page, is("redirect:/posts"));
     }
 
-
     @Test
     public void whenUpdatePostFromForm() {
         Post forUpdate = posts.get(0);
@@ -100,5 +96,10 @@ public class PostControllerTest {
         verify(postService).update(input);
         assertThat(page, is("redirect:/posts"));
         assertThat(input.getCity(), is(newCity));
+    }
+
+    @Test
+    public void whenDeletePost() {
+
     }
 }

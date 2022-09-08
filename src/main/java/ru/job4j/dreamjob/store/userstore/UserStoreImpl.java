@@ -1,4 +1,4 @@
-package ru.job4j.dreamjob.store;
+package ru.job4j.dreamjob.store.userstore;
 
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
@@ -7,24 +7,22 @@ import ru.job4j.dreamjob.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Repository
 @ThreadSafe
-public class UserStore implements Store<User> {
+public class UserStoreImpl implements UserStore {
 
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
     private final AtomicInteger id = new AtomicInteger();
 
-    public UserStore() {
-
-    }
-
     @Override
-    public User add(User user) {
+    public Optional<User> add(User user) {
         user.setId(id.incrementAndGet());
-        return users.putIfAbsent(user.getId(), user);
+        return Optional.ofNullable(users.putIfAbsent(user.getId(), user));
     }
 
     @Override
@@ -35,6 +33,14 @@ public class UserStore implements Store<User> {
     @Override
     public User findById(int id) {
         return users.get(id);
+    }
+
+    @Override
+    public Optional<User> findUserByEmailAndPwd(String email, String password) {
+        return users.values()
+                .stream()
+                .filter(u -> u.getEmail().equals(email) && u.getPassword().equals(password))
+                .findFirst();
     }
 
     @Override

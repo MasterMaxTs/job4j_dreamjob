@@ -1,6 +1,7 @@
-package ru.job4j.dreamjob.store;
+package ru.job4j.dreamjob.store.userstore;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.User;
 
@@ -15,11 +16,12 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 
 @Repository
-public class UserDBStore implements Store<User> {
+public class UserDBStore implements UserStore {
 
     private final BasicDataSource pool;
     private static final Logger LOG = Logger.getLogger("UserDBStore.class");
 
+    @Autowired
     public UserDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
@@ -49,8 +51,8 @@ public class UserDBStore implements Store<User> {
     }
 
     @Override
-    public User add(User user) {
-        User rsl = null;
+    public Optional<User> add(User user) {
+        Optional<User> rsl = Optional.empty();
         String sql = "INSERT INTO users (name, email, password)"
                 + "VALUES (? , ? , ?)";
         LOG.info("Trying to add a user to DB");
@@ -67,7 +69,7 @@ public class UserDBStore implements Store<User> {
                 }
             }
             LOG.info("Success!");
-            rsl = user;
+            rsl = Optional.of(user);
         } catch (SQLException e) {
             LOG.error("Not successful: " + e.getMessage(), e);
         }

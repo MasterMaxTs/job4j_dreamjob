@@ -1,6 +1,7 @@
-package ru.job4j.dreamjob.controllers;
+package ru.job4j.dreamjob.controller;
 
 import net.jcip.annotations.ThreadSafe;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.model.User;
-import ru.job4j.dreamjob.services.CandidateService;
+import ru.job4j.dreamjob.service.candidateservice.CandidateService;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class CandidateController implements ManageSession {
 
     private final CandidateService candidateService;
 
+    @Autowired
     public CandidateController(CandidateService candidateService) {
         this.candidateService = candidateService;
     }

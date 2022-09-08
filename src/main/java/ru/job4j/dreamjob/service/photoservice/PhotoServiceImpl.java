@@ -1,4 +1,4 @@
-package ru.job4j.dreamjob.services.photoservice;
+package ru.job4j.dreamjob.service.photoservice;
 
 import org.springframework.stereotype.Service;
 
@@ -11,26 +11,29 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class PhotoService implements ManagePhoto {
+public class PhotoServiceImpl implements PhotoService {
 
     private final Map<Integer, byte[]> photos = new ConcurrentHashMap<>();
 
-    public boolean addPhoto(int id, byte[] file) throws IOException {
-        save(id, file);
+    @Override
+    public boolean addPhoto(int id, byte[] file) {
+        savePhoto(id, file);
         return photos.putIfAbsent(id, file) != null;
     }
 
+    @Override
     public void updatePhoto(int id, byte[] file) {
         photos.replace(id, file);
-        save(id, file);
+        savePhoto(id, file);
     }
 
+    @Override
     public byte[] findById(int id) {
         return photos.get(id);
     }
 
     @Override
-    public void save(int id, byte[] photo) {
+    public void savePhoto(int id, byte[] photo) {
         final String extension = ".jpg";
         try {
             Files.write(Path.of(PATH + id + extension), photo);
