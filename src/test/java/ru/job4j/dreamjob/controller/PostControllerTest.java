@@ -100,6 +100,10 @@ public class PostControllerTest {
 
     @Test
     public void whenDeletePost() {
-
+        Post input = posts.get(0);
+        int postId = input.getId();
+        String page = postController.deletePost(postId);
+        verify(postService).delete(postId);
+        assertThat(page, is("redirect:/posts"));
     }
 }
