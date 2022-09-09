@@ -1,5 +1,6 @@
 package ru.job4j.dreamjob.service.cityservice;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.job4j.dreamjob.model.City;
 
@@ -13,10 +14,14 @@ public class CityServiceImpl implements CityService {
 
     private final Map<Integer, City> cities = new HashMap<>();
 
-    public CityServiceImpl() {
-        cities.put(1, new City(1, "Москва"));
-        cities.put(2, new City(2, "СПб"));
-        cities.put(3, new City(3, "Екб"));
+    public CityServiceImpl(@Value("${city-names}") List<String> cityNames) {
+        init(cityNames);
+    }
+
+    private void init(List<String> names) {
+        for (int i = 0; i < names.size(); i++) {
+            cities.put(i + 1, new City(i + 1, names.get(i)));
+        }
     }
 
     @Override
